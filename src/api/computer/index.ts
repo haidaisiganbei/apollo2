@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import type { IComputerParams, IComputerResponse, IComputerTreeParams, IComputerTreeResponse, IDeleteComputerParams, IUpdateGroupParams } from '@/types/computer'
+import type { IAddGroupParams, IComputerParams, IComputerResponse, IComputerTreeParams, IComputerTreeResponse, IDeleteComputerParams, IDeleteGroupParams, IGetComputerPolicyParams, IUpdateComputerParams, IUpdateGroupParams } from '@/types/computer'
 
 const baseURL = '/cluster-apollo/apollo/computer'
 
@@ -20,7 +20,7 @@ export const getTree = async (info: IComputerTreeParams): Promise<IComputerTreeR
  * @param info 
  * @returns 
  */
-export const saveTreeInfoApi = async (info:IDeleteComputerParams) => {
+export const saveTreeInfoApi = async (info:IAddGroupParams) => {
   return request({
     url: `${baseURL}/group/op/add`,
     method: 'post',
@@ -32,7 +32,7 @@ export const saveTreeInfoApi = async (info:IDeleteComputerParams) => {
  * @param info 
  * @returns 
  */
-export const removeTreeInfoByIdApi = async (info:IDeleteComputerParams) => {
+export const removeTreeInfoByIdApi = async (info:IDeleteGroupParams) => {
   return request({
     url: `${baseURL}/group/delete`,
     method: 'post',
@@ -63,8 +63,12 @@ export const getComputerInfoApi = async (info:IComputerParams):Promise<IComputer
     data: info
   });
 };
-
-export const editComputerInfoApi = async (info) => {
+/**
+ * 更新计算机信息
+ * @param info 
+ * @returns 
+ */
+export const editComputerInfoApi = async (info:IUpdateComputerParams) => {
   return request({
     url: `${baseURL}/op/update`,
     method: 'post',
@@ -72,7 +76,7 @@ export const editComputerInfoApi = async (info) => {
   });
 };
 
-export const editPolicyFlagApi = async (info) => {
+export const editPolicyFlagApi = async (info:IGetComputerPolicyParams) => {
   return request({
     url: `${baseURL}/op/policyFlag`,
     method: 'post',
@@ -80,7 +84,7 @@ export const editPolicyFlagApi = async (info) => {
   });
 };
 
-export const uninstallComputerInfoApi = async (info) => {
+export const uninstallComputerInfoApi = async (info:IDeleteComputerParams) => {
   return request({
     url: `${baseURL}/op/uninstall`,
     method: 'post',

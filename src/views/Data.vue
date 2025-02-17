@@ -2,11 +2,8 @@
   <div class="home-container">
     <!-- 左右结构、左边树、右边内容 -->
     <div class="home-left">
-      <TreeComponent v-model:data="treeData" @node-added="handleNodeAdded" 
-      @node-updated="handleNodeUpdated"
-      @node-deleted="handleNodeDeleted"
-      @node-clicked="handleNodeClicked"
-      />
+      <TreeComponent ref="treeRef" v-model:data="treeData" @node-added="handleNodeAdded"
+        @node-updated="handleNodeUpdated" @node-deleted="handleNodeDeleted" @node-clicked="handleNodeClicked" />
     </div>
     <div class="home-right">
       <!-- <router-view /> -->
@@ -15,7 +12,8 @@
           <el-tab-pane :label="tab.label" :name="tab.name">
           </el-tab-pane>
         </template>
-        <component v-if="currentComputer"  :is="components[activeName]" :node="currentComputer" />
+        <component v-if="currentComputer" :is="components[activeName]" :node="currentComputer"
+          @updatetree="handleUpdateComputerName" />
       </el-tabs>
     </div>
   </div>
@@ -36,6 +34,7 @@ const handleClick = (tab, event) => {
   console.log(tab, event)
 }
 
+const treeRef = ref(null)
 const treeData = ref([])
 const refreshTreeData = async () => {
   const res = await computerApi.getTree({})
@@ -48,7 +47,7 @@ onMounted(async () => {
 const currentComputer = ref(null)
 const handleNodeClicked = (node) => {
   console.log('节点被点击:', node)
-  if(node.groupFlag) return
+  if (node.groupFlag) return
   currentComputer.value = node
 }
 /**
@@ -96,6 +95,11 @@ const handleNodeDeleted = async (node) => {
   await computerApi.removeTreeInfoByIdApi({ id: node.id })
   await refreshTreeData()
 }
+
+const handleUpdateComputerName = async (val) => {
+  await refreshTreeData()
+  // currentComputer.value = null
+}
 </script>
 
 <style scoped lang="scss">
@@ -115,9 +119,9 @@ const handleNodeDeleted = async (node) => {
     .demo-tabs {
       ::v-deep(.el-tabs__content) {
         padding: 16px;
-        color: #6b778c;
-        font-size: 32px;
-        font-weight: 600;
+        // color: #6b778c;
+        // font-size: 32px;
+        // font-weight: 600;
       }
     }
   }
