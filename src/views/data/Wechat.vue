@@ -58,6 +58,6 @@ const sendMessage = (message: string) => {
 <style scoped>
 .app {
   display: flex;
-  /* height: 100vh; */
+  height: calc(100vh - 160px);
 }
 </style>

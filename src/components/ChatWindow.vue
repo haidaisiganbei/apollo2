@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { ref, computed, defineProps } from 'vue';
 import { ElInput, ElDatePicker, ElTabs, ElTabPane } from 'element-plus';
-import ChatTabContent from './ChatTabContent.vue';
+import ChatTabContent from './chat';
 import { Search } from '@element-plus/icons-vue';
 
 interface Message {
@@ -53,12 +53,15 @@ const filteredMessages = computed(() => {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 0 10px;
 }
 
 .chat-header {
   display: inline-flex;
   align-items: center;
-  padding: 10px;
+  padding:  10px;
+  padding-left: 0;
+  padding-right: 0px;
   border-bottom: 1px solid #ccc;
   .search-input {
     margin-right: 10px;

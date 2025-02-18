@@ -12,7 +12,7 @@
           <el-tab-pane :label="tab.label" :name="tab.name">
           </el-tab-pane>
         </template>
-        <component v-if="currentComputer" :is="components[activeName]" :node="currentComputer"
+        <component  :is="components[activeName]" :node="currentComputer"
           @updatetree="handleUpdateComputerName" />
       </el-tabs>
     </div>
@@ -28,7 +28,7 @@ import WechatWeb from './data/WechatWeb.vue';
 import Telegram from './data/Telegram.vue';
 import { ref, onMounted, shallowRef } from 'vue'
 import { computerApi } from '@/api'
-const activeName = ref('Policy')
+const activeName = ref('Wechat')
 
 const handleClick = (tab, event) => {
   console.log(tab, event)
@@ -114,14 +114,11 @@ const handleUpdateComputerName = async (val) => {
 
   .home-right {
     flex: 1;
-    padding: 20px;
+    padding: 0 20px;
 
     .demo-tabs {
       ::v-deep(.el-tabs__content) {
-        padding: 16px;
-        // color: #6b778c;
-        // font-size: 32px;
-        // font-weight: 600;
+       
       }
     }
   }
