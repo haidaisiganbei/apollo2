@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import type { IAddGroupParams, IComputerParams, IComputerResponse, IComputerTreeParams, IComputerTreeResponse, IDeleteComputerParams, IDeleteGroupParams, IGetComputerPolicyParams, IUpdateComputerParams, IUpdateGroupParams } from '@/types/computer'
+import type { IAddGroupParams, IComputerParams, IComputerResponse, IComputerSortParams, IComputerTreeParams, IComputerTreeResponse, IDeleteComputerParams, IDeleteGroupParams, IGetComputerPolicyParams, IUpdateComputerParams, IUpdateGroupParams } from '@/types/computer'
 
 const baseURL = '/cluster-apollo/apollo/computer'
 
@@ -91,3 +91,14 @@ export const uninstallComputerInfoApi = async (info:IDeleteComputerParams) => {
     data: info
   });
 };
+
+/**
+ * 计算机排序
+ */
+export const sortComputerApi = async (data:IComputerSortParams) => {
+  return request({
+    url: `${baseURL}/op/sort`,
+    method: 'post',
+    data: data
+  });
+}

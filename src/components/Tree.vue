@@ -14,7 +14,9 @@
     <!-- 树形结构 -->
     <el-tree ref="treeRef" :data="treeData" node-key="id" :props="defaultProps" default-expand-all draggable
       :allow-drag="allowDrag" :allow-drop="allowDrop" :filter-node-method="filterNode" :expand-on-click-node="false"
-      @node-contextmenu="handleContextMenu" @node-click="handleNodeClick">
+      @node-contextmenu="handleContextMenu" @node-click="handleNodeClick"
+      @node-drag-end="handleDragEnd"
+      >
       <template #default="{ node, data }">
         <div class="custom-node" :title="data.name" @dblclick="handleNodeDblclick(node, data)">
           
@@ -70,7 +72,9 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:data', 'node-added', 'node-deleted', 'node-updated', 'node-clicked'])
+const emit = defineEmits(['update:data', 'node-added', 'node-deleted', 'node-updated', 'node-clicked',
+  'node-drag-end'
+])
 
 const treeRef = ref<any>(null)
 const filterText = ref('')
@@ -181,6 +185,11 @@ const allowDrop = (draggingNode: Node, dropNode: Node, type: AllowDropType) => {
     return dropNode.data.groupFlag && type == 'inner' || !dropNode.data.groupFlag && type !== 'inner'
   }
 }
+
+const handleDragEnd = (draggingNode: Node, dropNode: Node, dropType: AllowDropType, ev: DragEvent) => {
+  emit('node-drag-end', draggingNode.data, dropNode.data, dropType)
+}
+
 // // 监听过滤文本
 // watch(filterText, (val) => {
 //   treeRef.value.filter(val)

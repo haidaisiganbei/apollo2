@@ -114,3 +114,13 @@ export interface IUpdateGroupParams {
 export interface IDeleteGroupParams {
   id: number;
 }
+
+/**
+ * 排序参数
+ */
+export interface IComputerSortParams {
+  parentId: number;
+  id: number;
+  sort: number;
+  groupFlag: boolean;
+}

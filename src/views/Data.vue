@@ -3,7 +3,8 @@
     <!-- 左右结构、左边树、右边内容 -->
     <div class="home-left">
       <TreeComponent ref="treeRef" v-model:data="treeData" @node-added="handleNodeAdded"
-        @node-updated="handleNodeUpdated" @node-deleted="handleNodeDeleted" @node-clicked="handleNodeClicked" />
+        @node-updated="handleNodeUpdated" @node-deleted="handleNodeDeleted" @node-clicked="handleNodeClicked"
+        @node-drag-end="handleNodeDragEnd" />
     </div>
     <div class="home-right">
       <!-- <router-view /> -->
@@ -12,8 +13,7 @@
           <el-tab-pane :label="tab.label" :name="tab.name">
           </el-tab-pane>
         </template>
-        <component  :is="components[activeName]" :node="currentComputer"
-          @updatetree="handleUpdateComputerName" />
+        <component :is="components[activeName]" :node="currentComputer" @updatetree="handleUpdateComputerName" />
       </el-tabs>
     </div>
   </div>
@@ -100,6 +100,24 @@ const handleUpdateComputerName = async (val) => {
   await refreshTreeData()
   // currentComputer.value = null
 }
+
+const handleNodeDragEnd = async (draggingNode, dropNode, dropType, ev) => {
+  console.log('拖拽结束:', draggingNode, dropNode, dropType, ev)
+  let sort = dropNode.sort
+  if (dropType === 'before') {
+    sort = dropNode.sort
+  } else if (dropType === 'after') {
+    sort = dropNode.sort + 1
+  }
+
+  await computerApi.sortComputerApi([{
+    "parentId": dropNode.parentId,
+    "id": draggingNode.id,
+    "sort": sort,
+    "groupFlag": dropNode.groupFlag
+  }])
+  await refreshTreeData()
+}
 </script>
 
 <style scoped lang="scss">
@@ -117,9 +135,7 @@ const handleUpdateComputerName = async (val) => {
     padding: 0 20px;
 
     .demo-tabs {
-      ::v-deep(.el-tabs__content) {
-       
-      }
+      ::v-deep(.el-tabs__content) {}
     }
   }
 }
