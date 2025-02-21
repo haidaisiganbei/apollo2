@@ -13,7 +13,7 @@
           <el-tab-pane :label="tab.label" :name="tab.name">
           </el-tab-pane>
         </template>
-        <component :is="components[activeName]" :node="currentComputer" @updatetree="handleUpdateComputerName" />
+        <component v-if="currentComputer" :is="components[activeName]" :node="currentComputer" @updatetree="handleUpdateComputerName" />
       </el-tabs>
     </div>
   </div>
@@ -37,8 +37,7 @@ const handleClick = (tab, event) => {
 const treeRef = ref(null)
 const treeData = ref([])
 const refreshTreeData = async () => {
-  const res = await computerApi.getTree({})
-  treeData.value = res.data
+  treeData.value = await computerApi.getTree({})
 }
 onMounted(async () => {
   refreshTreeData()
@@ -102,20 +101,36 @@ const handleUpdateComputerName = async (val) => {
 }
 
 const handleNodeDragEnd = async (draggingNode, dropNode, dropType, ev) => {
-  console.log('拖拽结束:', draggingNode, dropNode, dropType, ev)
-  let sort = dropNode.sort
-  if (dropType === 'before') {
-    sort = dropNode.sort
-  } else if (dropType === 'after') {
-    sort = dropNode.sort + 1
-  }
+  try {
+    console.log('拖拽结束:', draggingNode, dropNode, dropType, ev)
+    let sort = dropNode.sort
+    if (dropType === 'before') {
+      sort = dropNode.sort
+    } else if (dropType === 'after') {
+      sort = dropNode.sort + 1
+    }
+    // 拖拽的是文件夹
+    if (draggingNode.groupFlag) {
+      await computerApi.sortComputerApi([draggingNode, dropNode])
+    } else {
+      // 拖拽的是电脑
+      // 判断是否是同一个父节点
+      if (draggingNode.parentId === dropNode.parentId) {
+        // 判断是否是同一个节点
+        await computerApi.sortComputerApi([draggingNode, dropNode])
+      } else {
+        await computerApi.sortComputerApi([{
+          "id": draggingNode.id,
+          "parentId": dropNode.groupFlag?dropNode.id:dropNode.parentId,
+          // "name": draggingNode.name,
+          "groupFlag": draggingNode.groupFlag,
+          sort
+        }])
+      }
+    }
+  } catch (error) {
 
-  await computerApi.sortComputerApi([{
-    "parentId": dropNode.parentId,
-    "id": draggingNode.id,
-    "sort": sort,
-    "groupFlag": dropNode.groupFlag
-  }])
+  }
   await refreshTreeData()
 }
 </script>

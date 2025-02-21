@@ -18,11 +18,14 @@ export default defineConfig({
       ],
       imports: [
         'vue',
-        'vue-router'
-      ]
+        'vue-router',
+      ],
+      // include:['src/api/index.ts'],
+      dts: 'src/types/auto-imports.d.ts',
     }),
     Components({
       resolvers: [ElementPlusResolver()],
+      dts:'src/types/components.d.ts',
     }),
     Icons({
       autoInstall: true,

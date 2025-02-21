@@ -1,6 +1,4 @@
 import request from '@/utils/request';
-import type { IAddGroupParams, IComputerParams, IComputerResponse, IComputerSortParams, IComputerTreeParams, IComputerTreeResponse, IDeleteComputerParams, IDeleteGroupParams, IGetComputerPolicyParams, IUpdateComputerParams, IUpdateGroupParams } from '@/types/computer'
-
 const baseURL = '/cluster-apollo/apollo/computer'
 
 /**
@@ -20,7 +18,7 @@ export const getTree = async (info: IComputerTreeParams): Promise<IComputerTreeR
  * @param info 
  * @returns 
  */
-export const saveTreeInfoApi = async (info:IAddGroupParams) => {
+export const saveTreeInfoApi = async (info: IAddGroupParams) => {
   return request({
     url: `${baseURL}/group/op/add`,
     method: 'post',
@@ -32,7 +30,7 @@ export const saveTreeInfoApi = async (info:IAddGroupParams) => {
  * @param info 
  * @returns 
  */
-export const removeTreeInfoByIdApi = async (info:IDeleteGroupParams) => {
+export const removeTreeInfoByIdApi = async (info: IDeleteGroupParams) => {
   return request({
     url: `${baseURL}/group/delete`,
     method: 'post',
@@ -44,7 +42,7 @@ export const removeTreeInfoByIdApi = async (info:IDeleteGroupParams) => {
  * @param info 
  * @returns 
  */
-export const editGroupNameApi = async (info:IUpdateGroupParams) => {
+export const editGroupNameApi = async (info: IUpdateGroupParams) => {
   return request({
     url: `${baseURL}/group/op/update`,
     method: 'post',
@@ -56,7 +54,7 @@ export const editGroupNameApi = async (info:IUpdateGroupParams) => {
  * @param info 
  * @returns 
  */
-export const getComputerInfoApi = async (info:IComputerParams):Promise<IComputerResponse> => {
+export const getComputerInfoApi = async (info: IComputerParams): Promise<IComputerInfo> => {
   return request({
     url: `${baseURL}/get`,
     method: 'post',
@@ -68,7 +66,7 @@ export const getComputerInfoApi = async (info:IComputerParams):Promise<IComputer
  * @param info 
  * @returns 
  */
-export const editComputerInfoApi = async (info:IUpdateComputerParams) => {
+export const editComputerInfoApi = async (info: IUpdateComputerParams) => {
   return request({
     url: `${baseURL}/op/update`,
     method: 'post',
@@ -76,7 +74,7 @@ export const editComputerInfoApi = async (info:IUpdateComputerParams) => {
   });
 };
 
-export const editPolicyFlagApi = async (info:IGetComputerPolicyParams) => {
+export const editPolicyFlagApi = async (info: IGetComputerPolicyParams) => {
   return request({
     url: `${baseURL}/op/policyFlag`,
     method: 'post',
@@ -84,7 +82,7 @@ export const editPolicyFlagApi = async (info:IGetComputerPolicyParams) => {
   });
 };
 
-export const uninstallComputerInfoApi = async (info:IDeleteComputerParams) => {
+export const uninstallComputerInfoApi = async (info: IDeleteComputerParams) => {
   return request({
     url: `${baseURL}/op/uninstall`,
     method: 'post',
@@ -95,7 +93,7 @@ export const uninstallComputerInfoApi = async (info:IDeleteComputerParams) => {
 /**
  * 计算机排序
  */
-export const sortComputerApi = async (data:IComputerSortParams) => {
+export const sortComputerApi = async (data: IComputerSortParams) => {
   return request({
     url: `${baseURL}/op/sort`,
     method: 'post',

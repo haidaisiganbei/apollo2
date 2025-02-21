@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <Sidebar :friends="friends" :recentMessages="recentMessages" @selectFriend="selectFriend" />
+    <Sidebar :accounts="accounts" :friends="friends" :recentMessages="recentMessages" @selectFriend="selectFriend" />
     <ChatWindow :selectedFriend="selectedFriend" :messages="messages" @sendMessage="sendMessage" />
   </div>
 </template>
@@ -9,6 +9,47 @@
 import { ref } from 'vue';
 import Sidebar from '@/components/ChatSidebar.vue';
 import ChatWindow from '@/components/ChatWindow.vue';
+import { imApi } from '@/api';
+const props = defineProps({
+  node: {
+    type: Object,
+    default: () => { }
+  },
+})
+// 定义账号列表
+const accounts = ref<IAccountListItem[]>([
+  // 使用两条假数据
+  {
+    id: 1,
+    externalId: '1',
+    uniqueName: '2',
+    name: '个人账号',
+    extend: ''
+  },
+  {
+    id: 2,
+    externalId: '2',
+    uniqueName: '2',
+    name: '工作账号',
+    extend: ''
+  }
+])
+const initAccountList = async () => {
+  accounts.value = await imApi.getAccountList({
+    computerId: props.node.id,
+    imType: 0
+  })
+}
+// 获取账号列表
+onMounted(() => {
+  initAccountList()
+})
+watch(() => props.node, () => {
+  initAccountList()
+})
+
+
+
 
 interface Friend {
   name: string;

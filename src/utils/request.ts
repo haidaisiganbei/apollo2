@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ElMessage } from 'element-plus';
 
 // 创建 axios 实例
 console.log(import.meta.env);
@@ -31,17 +32,21 @@ service.interceptors.response.use(
   response => {
     // 对响应数据做点什么
     const res = response.data;
+    console.log('res:', res);
+
     if (res.code !== 0) {
       // 这里可以根据实际情况进行处理，比如显示错误信息
       console.error('Error:', res.message);
+      ElMessage.error(res.error || 'Error');
       return Promise.reject(new Error(res.message || 'Error'));
     } else {
-      return res;
+      return res.data;
     }
   },
   error => {
     // 对响应错误做点什么
     console.error('Error:', error);
+    ElMessage.error(error.message || 'Error');
     return Promise.reject(error);
   }
 );

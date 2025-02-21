@@ -34,7 +34,6 @@
 <script setup lang='ts'>
 import { onMounted, ref, watch } from 'vue';
 import { computerApi } from '@/api'
-import type { IComputerInfo, IComputerResponse } from '@/types/computer';
 import EditableInput from '@/components/EditableInput.vue';
 import { ElMessage } from 'element-plus';
 const props = defineProps({
@@ -51,10 +50,9 @@ const refreshComputerInfo = async () => {
   const res = await computerApi.getComputerInfoApi({
     id: props.node.id
   })
-  computerInfo.value = res.data
-  editableText.value = res.data.remarkName
-  isAllFunction.value = res.data.policyFlag
-  // computerApi
+  computerInfo.value = res
+  editableText.value = res.remarkName
+  isAllFunction.value = res.policyFlag
 }
 onMounted(async () => {
   console.log('policy mounted', props.node)
@@ -68,7 +66,7 @@ watch(() => props.node, async () => {
 const isAllFunction = ref(false)
 // 名称修改
 const handleNameChange = async (val: string) => {
-  const res = await computerApi.editComputerInfoApi({
+  await computerApi.editComputerInfoApi({
     id: props.node.id,
     remarkName: val,
     groupId: props.node.parentId
@@ -80,7 +78,7 @@ const handleNameChange = async (val: string) => {
 }
 // 卸载客户端
 const handleUninstall = async () => {
-  const res = await computerApi.uninstallComputerInfoApi({
+  await computerApi.uninstallComputerInfoApi({
     id: props.node.id
   })
   ElMessage.success('卸载成功')
@@ -89,7 +87,7 @@ const handleUninstall = async () => {
 }
 // 所有功能开关
 const handleAllFunctionChange = async (val: boolean) => {
-  const res = await computerApi.editPolicyFlagApi({
+  await computerApi.editPolicyFlagApi({
     id: props.node.id,
     enabled: val
   })

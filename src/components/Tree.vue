@@ -14,15 +14,17 @@
     <!-- 树形结构 -->
     <el-tree ref="treeRef" :data="treeData" node-key="id" :props="defaultProps" default-expand-all draggable
       :allow-drag="allowDrag" :allow-drop="allowDrop" :filter-node-method="filterNode" :expand-on-click-node="false"
-      @node-contextmenu="handleContextMenu" @node-click="handleNodeClick"
-      @node-drag-end="handleDragEnd"
-      >
+      @node-contextmenu="handleContextMenu" @node-click="handleNodeClick" @node-drag-end="handleDragEnd">
       <template #default="{ node, data }">
-        <div class="custom-node" :title="data.name" @dblclick="handleNodeDblclick(node, data)">
-          
+        <div :class="['custom-node', { 'selected-node': selectedNode && selectedNode.id === data.id }]"
+          :title="data.name" @dblclick="handleNodeDblclick(node, data)">
           <span>
-            <el-icon v-if="data.groupFlag"><Folder /></el-icon>
-            <el-icon v-else><Monitor /></el-icon>
+            <el-icon v-if="data.groupFlag">
+              <Folder />
+            </el-icon>
+            <el-icon v-else>
+              <Monitor />
+            </el-icon>
             {{ node.label }}{{ data.children.length ? `(${data.children.length})` : null }}</span>
           <span v-if="!isFiltering && data.groupFlag" class="node-actions">
             <el-button v-if="data.id == 1" title="新增" type="primary" link @click.stop="handleAddChild(data)">
@@ -57,7 +59,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { Plus, DeleteFilled,Folder,Monitor } from '@element-plus/icons-vue'
+import { Plus, DeleteFilled, Folder, Monitor } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import type Node from 'element-plus/es/components/tree/src/model/node'
 import type { DragEvents } from 'element-plus/es/components/tree/src/model/useDragNode'
@@ -82,6 +84,7 @@ const dialogVisible = ref(false)
 const currentParent = ref(null)
 const form = ref({ name: '' })
 const currentNode = ref(null)
+const selectedNode = ref(null)
 const defaultProps = {
   children: 'children',
   label: 'name'
@@ -199,6 +202,7 @@ const handleDragEnd = (draggingNode: Node, dropNode: Node, dropType: AllowDropTy
 
 const handleNodeClick = (data) => {
   console.log(data);
+  selectedNode.value = data
   emit('node-clicked', data)
 }
 </script>
@@ -215,6 +219,10 @@ const handleNodeClick = (data) => {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+}
+
+.selected-node {
+  background-color: #f0f0f0;
 }
 
 .node-actions {
