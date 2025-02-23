@@ -12,11 +12,11 @@
         <div v-for="(friend, index) in filteredFriends" :key="index" :class="['friend-item', { 'selected': selectedFriend?.id === friend.id }]" @click="() => selectFriend(friend)">
           <!-- <img :src="friend.avatar" class="avatar" /> -->
           <div class="friend-info">
-            <span class="friend-name">{{ friend.name }}
+            <span class="friend-name">{{ friend.name || friend.uniqueName || friend.externalId }}
               {{ getGroupNumber(friend) }}
             </span>
-            <!-- <span class="recent-message">{{ recentMessages[friend.name]?.content }}</span>
-            <span class="timestamp">{{ dayjs(recentMessages[friend.name]?.timestamp).format(`MM月DD日`) }}</span> -->
+            <span class="recent-message">{{ JSON.parse(friend?.content).text }}</span>
+            <span class="timestamp">{{ dayjs(friend.createTime).format(`MM月DD日`) }}</span>
           </div>
         </div>
       </el-scrollbar>
@@ -125,6 +125,7 @@ const selectFriend = (friend: IFriendItem) => {
   padding: 10px;
   cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
+  height: 48px;
 }
 
 .friend-item:hover {
@@ -151,11 +152,23 @@ const selectFriend = (friend: IFriendItem) => {
 
 .friend-name {
   font-weight: bold;
+  width: calc(100% - 70px);
+  /* 只能一行 */
+  white-space: nowrap;
+  /* 文本多余省略 */
+  overflow: hidden;
+  text-overflow: ellipsis
 }
 
 .recent-message {
   color: gray;
   font-size: 12px;
+  /* width: 100px; */
+  /* 只能一行 */
+  white-space: nowrap;
+  /* 文本多余省略 */
+  overflow: hidden;
+  text-overflow: ellipsis
 }
 
 .timestamp {

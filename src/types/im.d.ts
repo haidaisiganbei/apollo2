@@ -35,6 +35,12 @@ declare global {
     type: number;
     /* 扩展信息 */
     extend: string;
+    /* 内容 */
+    content: string;
+    /* 消息类型 */
+    msgType: number;
+    /* 创建时间 */
+    createTime: string;
   }
 
   /* 统计对象入参 */
