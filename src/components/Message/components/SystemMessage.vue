@@ -1,8 +1,7 @@
 <template>
-  <div :class="['text-message', { 'self': props.record.selfFlag, 'other': !props.record.selfFlag }]">
-    <div :class="['message-bubble', { 'self-bubble': props.record.selfFlag, 'other-bubble': !props.record.selfFlag }]">
+  <div :class="['text-message']">
+    <div :class="['message-bubble']">
       {{ text }}
-      <span :class="['arrow', { 'self-arrow': props.record.selfFlag, 'other-arrow': !props.record.selfFlag }]"></span>
     </div>
   </div>
 </template>
@@ -24,13 +23,13 @@ const text = computed(() => {
 <style scoped>
 .text-message {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   margin-bottom: 10px;
 }
 
-.text-message.self {
+/* .text-message.self {
   justify-content: flex-end;
-}
+} */
 
 .message-bubble {
   max-width: 100%;
@@ -40,6 +39,7 @@ const text = computed(() => {
   position: relative;
 }
 
+/* 
 .self-bubble {
   background-color: #9eea6a;
   color: #000;
@@ -69,5 +69,5 @@ const text = computed(() => {
   border-color: transparent #9eea6a transparent transparent;
   top: 10px;
   left: -10px;
-}
+} */
 </style>

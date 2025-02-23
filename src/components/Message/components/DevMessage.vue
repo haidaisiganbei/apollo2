@@ -1,7 +1,7 @@
 <template>
   <div :class="['text-message', { 'self': props.record.selfFlag, 'other': !props.record.selfFlag }]">
     <div :class="['message-bubble', { 'self-bubble': props.record.selfFlag, 'other-bubble': !props.record.selfFlag }]">
-      {{ text }}
+      {{ title }}
       <span :class="['arrow', { 'self-arrow': props.record.selfFlag, 'other-arrow': !props.record.selfFlag }]"></span>
     </div>
   </div>
@@ -11,10 +11,10 @@
 const props = defineProps<{
   record: IRecord;
 }>()
-const text = computed(() => {
+const title = computed(() => {
   try {
     const content = JSON.parse(props.record.content)
-    return content.text
+    return content.title
   } catch (error) {
     return props.record.content
   }

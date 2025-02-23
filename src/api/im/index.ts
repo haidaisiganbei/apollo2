@@ -10,3 +10,27 @@ export function getAccountList(data: IGetAccountListParamsByComputerIdParams): P
     data
   })
 }
+// 获取好友列表
+export function getFriendList(data: IFriendListParams): Promise<IFriendItem[]> {
+  return request({
+    url: `${baseURL}/getAccountObjectList`,
+    method: 'post',
+    data
+  })
+}
+// 获取统计对象
+export function getStatisticsObject(data: IStatisticsObjectParams): Promise<IStatisticsObject> {
+  return request({
+    url: `${baseURL}/getObjectChatStatistics`,
+    method: 'post',
+    data
+  })
+}
+// 获取消息列表
+export function getMessageList(data: IChatDataParams): Promise<IChatDataResponse> {
+  return request({
+    url: `${baseURL}/getObjectChatList`,
+    method: 'post',
+    data
+  })
+}

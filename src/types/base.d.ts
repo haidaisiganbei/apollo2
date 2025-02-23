@@ -5,5 +5,9 @@ declare global {
     msg: string;
     data: T;
   }
+  interface IPage {
+    current: number;
+    size: number;
+  }
 }
-export {}
+export { }

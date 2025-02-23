@@ -10,7 +10,92 @@ declare global {
     /* 即时通讯类型 */
     imType: number;
   }
-  
+  /**
+   * 根据账号ID获取对象列表
+   */
+  interface IFriendListParams {
+    accountId: number;
+    name?: string;
+    content?: string;
+    beginTime?: string;
+    endTime?: string;
+  }
+
+  /* 好友对象 */
+  interface IFriendItem {
+    /* 对象ID */
+    id: number;
+    /* 外部ID */
+    externalId: string;
+    /* 唯一名称 */
+    uniqueName: string;
+    /* 名称 */
+    name: string;
+    /* 好友类型 */
+    type: number;
+    /* 扩展信息 */
+    extend: string;
+  }
+
+  /* 统计对象入参 */
+  interface IStatisticsObjectParams {
+    /* 对象id */
+    objectId: number;
+    /* 开始时间（天） */
+    beginTime?: string;
+    /* 结束时间（天） */
+    endTime?: string;
+  }
+  /* 统计对象响应 */
+  interface IStatisticsObject {
+    /* 全部数量 */
+    allCount: number;
+    /* 资金数量 */
+    fundCount: number;
+    /* 位置数量 */
+    positionCount: number;
+    /* 文件数量 */
+    fileCount: number;
+  }
+  /* 聊天数据入参 */
+  interface IChatDataParams {
+    size: number;
+    current: number;
+    objectId: number;
+  }
+  /* 聊天数据响应 */
+  interface IChatDataResponse {
+    records: IRecord[];
+    total: number;
+    size: number;
+    current: number;
+    orders: Order[];
+    optimizeCountSql: OptimizeCountSql;
+    searchCount: OptimizeCountSql;
+    optimizeJoinOfCountSql: boolean;
+    maxLimit: number;
+    countId: string;
+    pages: number;
+  }
+
+  interface OptimizeCountSql {
+  }
+
+  interface Order {
+    column: string;
+    asc: boolean;
+  }
+
+  interface IRecord {
+    id: number;
+    senderUniqueName: string;
+    senderName: string;
+    selfFlag: boolean;
+    content: string;
+    msgType: number;
+    createTime: string;
+  }
+
   interface IGetAccountListParamsByComputerIdResponse extends IBase<IAccountListItem[]> { }
   /**
    * 账号列表项
@@ -29,4 +114,4 @@ declare global {
   }
 }
 
-export {}
+export { }

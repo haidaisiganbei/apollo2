@@ -12,14 +12,14 @@
         :messagesPerPage="messagesPerPage"
         :onPageChange="handlePageChange"
       />
-      <el-pagination
+      <!-- <el-pagination
         class="pagination"
         background
         layout="prev, pager, next"
         :total="totalMessages"
         :page-size="messagesPerPage"
         @current-change="handlePageChange"
-      />
+      /> -->
     </div>
   </div>
 </template>

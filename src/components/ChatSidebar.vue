@@ -4,18 +4,19 @@
     <el-tabs v-model="activeAccount" class="account-tabs">
       <el-tab-pane v-for="account in accounts" :label="account.name" :name="account.id" />
     </el-tabs>
-    
     <div class="search">
       <el-input v-model="searchQuery" clearable placeholder="搜索/搜索联系人..." :prefix-icon="Search" />
     </div>
     <div class="friends-list">
       <el-scrollbar>
-        <div v-for="(friend, index) in filteredFriends" :key="index" class="friend-item" @click="() => selectFriend(friend)">
-          <img :src="friend.avatar" class="avatar" />
+        <div v-for="(friend, index) in filteredFriends" :key="index" :class="['friend-item', { 'selected': selectedFriend?.id === friend.id }]" @click="() => selectFriend(friend)">
+          <!-- <img :src="friend.avatar" class="avatar" /> -->
           <div class="friend-info">
-            <span class="friend-name">{{ friend.name }}</span>
-            <span class="recent-message">{{ recentMessages[friend.name]?.content }}</span>
-            <span class="timestamp">{{ dayjs(recentMessages[friend.name]?.timestamp).format(`MM月DD日`) }}</span>
+            <span class="friend-name">{{ friend.name }}
+              {{ getGroupNumber(friend) }}
+            </span>
+            <!-- <span class="recent-message">{{ recentMessages[friend.name]?.content }}</span>
+            <span class="timestamp">{{ dayjs(recentMessages[friend.name]?.timestamp).format(`MM月DD日`) }}</span> -->
           </div>
         </div>
       </el-scrollbar>
@@ -28,25 +29,61 @@
 import { ElInput, ElScrollbar } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import dayjs from 'dayjs';
+import { imApi } from '@/api';
 
-interface Friend {
-  name: string;
-  avatar: string;
+const props = defineProps<{
+  // recentMessages: { [key: string]: any },
+  node: IComputerTreeNode
+}>();
+const emit = defineEmits<{ (e: 'selectFriend', friend: IFriendItem): void }>();
+// 账号
+const accounts = ref<IAccountListItem[]>([])
+const activeAccount = ref<number>();
+const initAccountList = async () => {
+  accounts.value = await imApi.getAccountList({
+    computerId: props.node.id,
+    imType: 3
+  })
+  activeAccount.value = accounts?.value[0]?.id;
 }
-
-const props = defineProps<{ 
-  accounts:IAccountListItem[],
-  friends: Friend[], recentMessages: { [key: string]: any } }>();
-const emit = defineEmits<{ (e: 'selectFriend', friend: Friend): void }>();
-const activeAccount = ref<number>(props.accounts[0].id);
-
+onMounted(async () => {
+  await initAccountList()
+})
+watch(() => props.node, () => {
+  initAccountList()
+})
+// 好友
+const friends = ref<IFriendItem[]>([]);
+watch(() => activeAccount.value, async () => {
+  if (!activeAccount.value) return;
+  friends.value = await imApi.getFriendList({
+    accountId: activeAccount.value
+  })
+})
+/**
+ * 判断是否是群聊
+ * @param friend 
+ * @returns string
+ */
+const getGroupNumber = (friend: IFriendItem) => {
+   if(friend.type===1){
+    const extend = JSON.parse(friend.extend);
+    return `(${extend?.groupMemberCount})`;
+   }else{
+    return '';
+   }
+}
+// 搜索
 const searchQuery = ref<string>('');
 
 const filteredFriends = computed(() => {
-  return props.friends.filter(friend => friend.name.includes(searchQuery.value));
+  return friends.value.filter(friend => friend.name.includes(searchQuery.value));
 });
 
-const selectFriend = (friend: Friend) => {
+const selectedFriend = ref<IFriendItem | null>(null);
+
+const selectFriend = (friend: IFriendItem) => {
+  selectedFriend.value = friend;
   emit('selectFriend', friend);
 };
 </script>
@@ -94,6 +131,10 @@ const selectFriend = (friend: Friend) => {
   background-color: #f9f9f9;
 }
 
+.friend-item.selected {
+  background-color: #e6f7ff;
+}
+
 .avatar {
   width: 40px;
   height: 40px;
@@ -116,6 +157,7 @@ const selectFriend = (friend: Friend) => {
   color: gray;
   font-size: 12px;
 }
+
 .timestamp {
   position: absolute;
   right: 10px;

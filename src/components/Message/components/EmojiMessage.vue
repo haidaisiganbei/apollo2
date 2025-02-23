@@ -1,15 +1,11 @@
 <template>
-  <div class="video-message">
-    <!-- <div class="video-info">
-      <span>【视频】{{ formattedSize }}</span>
-    </div> -->
-    <div class="video-container">
-      <video v-if="isDownloadSuccess" :src="videoUrl" controls></video>
+  <div class="image-message">
+    <div class="image-container">
+      <img v-if="isDownloadSuccess" :src="imageUrl" alt="下载的图片" />
       <div v-else class="placeholder-container">
-        <!-- <video-icon class="placeholder-icon" /> -->
-         <div>视频</div>
-        <button @click="downloadVideo" class="download-button">下载</button>
-        <span class="video-size">{{ formatFileSize(content.video.size) }}</span>
+        <div>表情</div>
+        <button @click="downloadImage" class="download-button">下载</button>
+        <span class="image-size">{{ formatFileSize(content.image.size) }}</span>
       </div>
     </div>
   </div>
@@ -17,58 +13,58 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { VideoCameraFilled as VideoIcon } from '@element-plus/icons-vue';
+import { PictureFilled } from '@element-plus/icons-vue';
 import { formatFileSize } from '@/utils/util';
-
 const props = defineProps<{
-  record: IRecord;
+  record: IRecord
 }>();
 
 const content = computed(() => {
   try {
     return JSON.parse(props.record.content);
   } catch (error) {
-    return { status: null, errMsg: '', video: { size: 0 } };
+    return { status: null, errMsg: '', image: { size: 0 } };
   }
 });
 
 const isDownloadSuccess = computed(() => content.value.status === 3);
 
-const videoUrl = ref('');
+const imageUrl = ref('');
 
-const downloadVideo = async () => {
+const downloadImage = async () => {
   try {
-    // 这里调用你的接口获取视频URL，假设接口返回的URL为response.data.url
-    const response = await fetch(`/api/download-video/${props.record.id}`);
+    // 这里调用你的接口获取图片URL，假设接口返回的URL为response.data.url
+    const response = await fetch(`/api/download-image/${props.record.id}`);
     const data = await response.json();
-    videoUrl.value = data.url;
+    imageUrl.value = data.url;
   } catch (error) {
-    console.error('下载视频失败', error);
+    console.error('下载图片失败', error);
   }
 };
 </script>
 
 <style scoped>
-.video-message {
+.image-message {
   display: flex;
   flex-direction: column;
   align-items: start;
   width: 100%;
 }
 
-.video-container {
+.image-container {
   margin-top: 10px;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f5f5;
-  border: 1px solid #dcdfe6;
+  
   border-radius: 4px;
+  height: auto;
+  /* 可以根据需要调整高度 */
   position: relative;
 }
 
-.video-container video {
+.image-container img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -79,12 +75,17 @@ const downloadVideo = async () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  border: 1px solid #dcdfe6;
+
 }
 
 .placeholder-icon {
-  font-size: 16px;
+  font-size: 48px;
   color: #c0c4cc;
 }
 
@@ -102,7 +103,7 @@ const downloadVideo = async () => {
   background-color: #66b1ff;
 }
 
-.video-size {
+.image-size {
   margin-top: 5px;
   font-size: 14px;
   color: #606266;

@@ -126,5 +126,18 @@ declare global {
     sort: number;
     groupFlag: boolean;
   }
+
+  /**
+   * 计算机树节点
+   */
+  interface IComputerTreeNode {
+    id: number;
+    parentId: number;
+    name: string;
+    groupFlag: boolean;
+    sort: number;
+    children: IComputerTreeNode[];
+  }
+
 }
-export {}
+export { }

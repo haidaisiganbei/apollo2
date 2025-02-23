@@ -32,7 +32,6 @@ service.interceptors.response.use(
   response => {
     // 对响应数据做点什么
     const res = response.data;
-    console.log('res:', res);
 
     if (res.code !== 0) {
       // 这里可以根据实际情况进行处理，比如显示错误信息

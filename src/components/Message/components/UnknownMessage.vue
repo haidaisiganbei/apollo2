@@ -1,16 +1,14 @@
 <template>
   <div class="unknown-message">
-    <span>未知消息类型</span>
+    <div>消息类型：{{ record.msgType }}</div>
+    <span>{{ record.content }}</span>
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  message: {
-    type: Object,
-    required: true
-  }
-});
+<script setup lang="ts">
+const props = defineProps<{
+  record: IRecord;
+}>()
 </script>
 
 <style scoped>
