@@ -3,8 +3,12 @@
   <div class="search-container">
     <el-scrollbar>
       <div class='search-list'>
-        <div class='search-list-item' v-for='(item, index) in props.messages' :key='index'
-        @click="() => emit('select', item)"
+        <div 
+          class='search-list-item' 
+          v-for='(item, index) in props.messages' 
+          :key='index'
+          :class='{ selected: selectedItem === item }'
+          @click="() => selectItem(item)"
         >
           <div class='search-list-item-content' v-html="highlightKeyword(JSON.parse(item.content).text)">
           </div>
@@ -18,6 +22,8 @@
 </template>
 
 <script setup lang="ts" name='SearchList'>
+import { ref } from 'vue'
+
 // prop 接收的参数
 const props = defineProps<{
   messages: IGetObjectChatSearchData[]
@@ -27,20 +33,27 @@ const props = defineProps<{
 // emit
 const emit = defineEmits<{ (e: 'select', item: IGetObjectChatSearchData): void }>()
 
+// State to track selected item
+const selectedItem = ref<IGetObjectChatSearchData | null>(null)
+
 // Function to highlight keyword
 const highlightKeyword = (text: string) => {
   if (!props.keyword) return text
   const regex = new RegExp(`(${props.keyword})`, 'gi')
   return text.replace(regex, '<span style="color:red">$1</span>')
 }
+
+// Function to select an item
+const selectItem = (item: IGetObjectChatSearchData) => {
+  selectedItem.value = item
+  emit('select', item)
+}
 </script>
 
 <style lang='scss' scoped>
 .search-container {
-  // flex: 1;
   overflow: hidden;
-  // height: calc(100% - 60px);
-  height:600px;
+  height: 600px;
 }
 .search-list {
   display: flex;
@@ -66,21 +79,19 @@ const highlightKeyword = (text: string) => {
   &-content {
     font-size: 14px;
     color: #333;
-    // 不换行
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
-
   }
-
-
 
   &-timestamp {
     font-size: 12px;
     color: #999;
     margin-top: 5px;
-    // align-self: flex-end;
+  }
+
+  &.selected {
+    background-color: #f0f0f0;
   }
 }
 </style>
