@@ -118,6 +118,26 @@ declare global {
     /* 扩展信息 */
     extend: string;
   }
+  
+  interface IGetObjectChatSearchDataParams {
+    /* 每页数量 */
+    size: number;
+    /* 对象id */
+    objectId: number;
+    /* 搜索内容 */
+    content?: string;
+    /* 开始时间 */
+    beginTime?: string;
+    /* 结束时间 */
+    endTime?: string;
+  }
+
+  interface IGetObjectChatSearchData {
+    content: string;
+    createTime: string;
+    current: number;
+    pagePosition: number;
+  }
 }
 
 export { }

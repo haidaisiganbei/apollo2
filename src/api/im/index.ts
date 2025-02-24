@@ -34,3 +34,13 @@ export function getMessageList(data: IChatDataParams): Promise<IChatDataResponse
     data
   })
 }
+/**
+ * 获取对象聊天搜索数据（右侧）
+ */
+export const getChatSearchApi = async (data: IGetObjectChatSearchDataParams):Promise<IGetObjectChatSearchData[]> => {
+  return request({
+    url: `${baseURL}/getObjectChatSearchData`,
+    method: 'post',
+    data 
+  }) 
+}

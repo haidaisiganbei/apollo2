@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <Sidebar :node="node" @selectFriend="selectFriend" />
-    <ChatWindow :selectedFriend="selectedFriend" :node="node"  />
+    <ChatWindow v-if="selectedFriend" :selectedFriend="selectedFriend" :node="node"  />
   </div>
 </template>
 
