@@ -44,7 +44,10 @@ const initAccountList = async () => {
     computerId: props.node.id,
     imType: 3
   })
-  activeAccount.value = accounts?.value[0]?.id;
+  if(!activeAccount.value){
+    activeAccount.value = accounts?.value[0]?.id;
+  }
+
 }
 onMounted(async () => {
   await initAccountList()
@@ -59,6 +62,8 @@ watch(() => activeAccount.value, async () => {
   friends.value = await imApi.getFriendList({
     accountId: activeAccount.value
   })
+  // 选中第一个好友
+  selectFriend(friends.value[0]);
 })
 /**
  * 判断是否是群聊
@@ -75,7 +80,19 @@ const getGroupNumber = (friend: IFriendItem) => {
 }
 // 搜索
 const searchQuery = ref<string>('');
-
+// 暴露刷新方法给父组件
+defineExpose({
+  refreshFriends: async (keyword:string) => {
+    // await initAccountList();
+    if (activeAccount.value) {
+      friends.value = await imApi.getFriendList({
+        accountId: activeAccount.value,
+        content: keyword
+      });
+      selectFriend(friends.value[0]);
+    }
+  }
+});
 const filteredFriends = computed(() => {
   return friends.value.filter(friend => friend.name.includes(searchQuery.value));
 });

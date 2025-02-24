@@ -3,14 +3,15 @@
     <div ref="messageContainer" class="messages">
       <template v-if="messages">
         <div v-for="message in messages?.records" :key="message.id"
-          :class="['message', message.selfFlag ? 'self' : 'other', { 'highlighted': message.id === highlightedMessageId }]" :ref="setMessageRefs">
+          :class="['message', message.selfFlag ? 'self' : 'other', { 'highlighted': message.id === highlightedMessageId }]"
+          :ref="setMessageRefs">
           <div :class="['message-header', message.selfFlag ? 'self-header' : 'other-header']">
             <span class="username">{{ message.name }}</span>
             <span class="time">{{ message.createTime }}</span>
           </div>
-            <div class="message-content">
-              <Message :record="message" />
-            </div>
+          <div class="message-content">
+            <Message :record="message" />
+          </div>
         </div>
       </template>
     </div>
@@ -93,18 +94,21 @@ const scrollToTop = () => {
     messageContainer.value.scrollTop = 0;
   }
 };
-
-// 定位消息
 const handleSkip = async (message: IGetObjectChatSearchData) => {
+  // 添加高亮效果
+  highlightedMessageId.value = message.id;
+
+  // 1秒后清除高亮
+  highlightedMessageId.value = null;
   // 跳转到指定消息
   page.current = message.current;
   await initMessages();
   await nextTick();
   // const targetMessage = messageRefs.value.find(el => el.textContent?.includes(message.content));
-  const targetMessage = messageRefs.value[message.pagePosition-1];
+  const targetMessage = messageRefs.value[message.pagePosition - 1];
   // debugger
   if (targetMessage) {
-    highlightedMessageId.value = messages.value?.records[message.pagePosition-1].id || null;
+    highlightedMessageId.value = messages.value?.records[message.pagePosition - 1].id || null;
     targetMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }

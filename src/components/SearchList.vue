@@ -48,6 +48,9 @@ const selectItem = (item: IGetObjectChatSearchData) => {
   selectedItem.value = item
   emit('select', item)
 }
+defineExpose({
+  selectItem
+})
 </script>
 
 <style lang='scss' scoped>
