@@ -2,9 +2,8 @@
   <div class="chat-container">
     <div ref="messageContainer" class="messages">
       <template v-if="messages">
-        <div v-for="message in messages?.records" :key="message.id"
-          :class="['message', message.selfFlag ? 'self' : 'other', { 'highlighted': message.id === highlightedMessageId }]"
-          :ref="setMessageRefs">
+        <div v-for="message in messages?.records" :key="message.id" :class="['message', message.selfFlag ? 'self' : 'other', { 'highlighted': message.id === highlightedMessageId, 'middle': message.msgType == 66 },
+        ]" :ref="setMessageRefs">
           <div :class="['message-header', message.selfFlag ? 'self-header' : 'other-header']">
             <span class="username">{{ message.name }}</span>
             <span class="time">{{ message.createTime }}</span>
@@ -120,7 +119,7 @@ defineExpose({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .chat-container {
   height: calc(100vh - 270px);
   min-width: 800px;
@@ -174,6 +173,19 @@ defineExpose({
   overflow: auto;
   /* 消息显示不下就换行 */
   word-wrap: break-word;
+}
+
+.middle {
+  .message-header.other-header{
+    
+    justify-content: center !important;
+  }
+  .message-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+  }
 }
 
 .input-container {

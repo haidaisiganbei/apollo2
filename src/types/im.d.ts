@@ -146,10 +146,10 @@ declare global {
     size: number;
     current: number;
     computerId: number;
-    objectId: number;
-    beginTime?: string;
-    endTime?: string;
-    msgTypeList?: number[];
+    id: number;
+    // beginTime?: string;
+    // endTime?: string;
+    // msgTypeList?: number[];
   }
 }
 

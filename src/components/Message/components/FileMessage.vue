@@ -4,10 +4,10 @@
       <div class="file-name">{{ content.title }}</div>
       <div class="file-size">{{ formatFileSize(content.attachment.size) }}</div>
     </div>
-    <el-icon v-if="!content.status" class="file-icon">
+    <el-icon v-if="!content.status&&!isDownloading" class="file-icon">
       <Download @click="handleDownload" />
     </el-icon>
-    <el-icon v-if="content.status === 1" class="file-icon">
+    <el-icon v-if="content.status === 1&&isDownloading" class="file-icon">
       <Loading @click="handleDownload" />
     </el-icon>
     <!-- <el-icon v-if="content.status === 2" class="file-icon">
@@ -46,7 +46,31 @@ const handleDownload = async () => {
     id: props.record.id,
     computerId: props.record.computerId,
   })
+  pollMessageStatus()
 }
+const isDownloading = ref(false);
+const pollMessageStatus = () => {
+  const intervalId = setInterval(async () => {
+    console.log('轮询消息状态');
+    try {
+      const res = await imApi.getChatRecordApi({
+        size: 1,
+        current: 1,
+        computerId: Number(props.record.computerId),
+        objectId: Number(props.record.id),
+      });
+      const newContent = JSON.parse(res.content);
+      if (newContent.status === 3) {
+        clearInterval(intervalId);
+        isDownloading.value = false;
+      }
+    } catch (error) {
+      clearInterval(intervalId);
+      isDownloading.value = false;
+      console.error('获取消息状态失败', error);
+    }
+  }, 3000); // Poll every 3 seconds
+};
 const handlePreview = async () => {
   console.log('预览');
 

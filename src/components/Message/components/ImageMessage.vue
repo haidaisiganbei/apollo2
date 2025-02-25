@@ -57,13 +57,13 @@ const downloadImage = async () => {
 
 const pollMessageStatus = () => {
   const intervalId = setInterval(async () => {
-    console.log('轮询消息状态');
+    console.log('轮询消息状态',props.record);
     try {
       const res = await imApi.getChatRecordApi({
         size: 1,
         current: 1,
-        computerId: Number(props.record.computerId),
-        objectId: Number(props.friend.id),
+        computerId: props.record.computerId,
+        id: props.record.id,
       });
       const newContent = JSON.parse(res.content);
       if (newContent.status === 3) {

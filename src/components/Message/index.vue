@@ -1,7 +1,5 @@
 <template>
-  <div>
     <component :is="componentName" :record="record" :friend="friend"/>
-  </div>
 </template>
 
 <script lang="ts" setup>

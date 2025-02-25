@@ -1,8 +1,8 @@
 <template>
   <div :class="['text-message']">
-    <div :class="['message-bubble']">
-      {{ text }}
-    </div>
+    {{ text }}
+    <!-- <div :class="['message-bubble']">
+    </div> -->
   </div>
 </template>
 
@@ -22,52 +22,17 @@ const text = computed(() => {
 
 <style scoped>
 .text-message {
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
   margin-bottom: 10px;
-}
-
-/* .text-message.self {
-  justify-content: flex-end;
-} */
-
-.message-bubble {
-  max-width: 100%;
+  max-width: 70%; /* Adjust this value if you want a different max width */
   padding: 10px;
   border-radius: 4px;
   word-wrap: break-word;
-  position: relative;
+  background-color: #f1f1f1; /* Add a background color if needed */
+  text-align: center; /* Center the text inside the bubble */
 }
 
-/* 
-.self-bubble {
-  background-color: #9eea6a;
-  color: #000;
-}
-
-.other-bubble {
-  background-color: #9eea6a;
-  color: #000;
-}
-
-.arrow {
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-}
-
-.self-arrow {
-  border-width: 10px 0 10px 10px;
-  border-color: transparent transparent transparent #9eea6a;
-  top: 10px;
-  right: -10px;
-}
-
-.other-arrow {
-  border-width: 10px 10px 10px 0;
-  border-color: transparent #9eea6a transparent transparent;
-  top: 10px;
-  left: -10px;
+/* .message-bubble {
 } */
 </style>
