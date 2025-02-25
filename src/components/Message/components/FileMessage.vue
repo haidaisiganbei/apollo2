@@ -4,15 +4,26 @@
       <div class="file-name">{{ content.title }}</div>
       <div class="file-size">{{ formatFileSize(content.attachment.size) }}</div>
     </div>
-      <el-icon class="file-icon">
-        <Files />
-      </el-icon>
+    <el-icon v-if="!content.status" class="file-icon">
+      <Download @click="handleDownload" />
+    </el-icon>
+    <el-icon v-if="content.status === 1" class="file-icon">
+      <Loading @click="handleDownload" />
+    </el-icon>
+    <!-- <el-icon v-if="content.status === 2" class="file-icon">
+      <Files  @click="handleDownload" />
+    </el-icon> -->
+    <el-icon v-if="content.status === 3" class="file-icon" @click="handlePreview">
+      <Files />
+    </el-icon>
   </div>
 </template>
 
 <script setup lang="ts">
+import { imApi } from '@/api';
 import { formatFileSize } from '@/utils/util'
-import { Files } from '@element-plus/icons-vue'
+import { Files, Download, Loading } from '@element-plus/icons-vue'
+import qs from 'qs'
 const props = defineProps<{
   record: IRecord;
 }>()
@@ -29,6 +40,32 @@ const fileIcon = computed(() => {
   const fileType = content.value.fileType || 'unknown'
   return `/assets/file-icons/${fileType}.png`
 })
+
+const handleDownload = async () => {
+  const res = await imApi.downloadMessageFileApi({
+    id: props.record.id,
+    computerId: props.record.computerId,
+  })
+}
+const handlePreview = async () => {
+  console.log('预览');
+
+  try {
+
+    // const res = await imApi.getMessageFileApi({
+    // })
+    const params = {
+      id: props.record.id,
+      computerId: props.record.computerId,
+    }
+    window.open(`${import.meta.env.VITE_APP_BASE_API}/cluster-apollo/apollo/im/getChatAttachment?${qs.stringify(params)}`)
+  } catch (error) {
+
+    console.log(error);
+  }
+
+}
+
 </script>
 
 <style scoped>
@@ -48,6 +85,7 @@ const fileIcon = computed(() => {
   height: 40px;
   margin-left: 10px;
   font-size: 32px;
+  cursor: pointer;
 }
 
 .file-info {

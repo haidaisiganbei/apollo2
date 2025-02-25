@@ -8,14 +8,16 @@
         <el-descriptions-item label="计算机名："> {{ computerInfo?.computerName }} </el-descriptions-item>
         <el-descriptions-item label="ip地址：">{{ computerInfo?.ipAddress }}</el-descriptions-item>
         <el-descriptions-item label="网卡地址：">{{ computerInfo?.macAddress }}</el-descriptions-item>
-        <el-descriptions-item label="CPU利用率：">{{ computerInfo?.cpuUsage }}</el-descriptions-item>
-        <el-descriptions-item label="内存利用率：">{{ computerInfo?.memoryUsage }}</el-descriptions-item>
-        <el-descriptions-item label="磁盘利用率：">{{ computerInfo?.diskUsage }}</el-descriptions-item>
-        <el-descriptions-item label="联网情况：">{{ computerInfo?.status }}</el-descriptions-item>
+        <el-descriptions-item label="CPU利用率：">{{ computerInfo?.cpuUsage }}%</el-descriptions-item>
+        <el-descriptions-item label="内存利用率：">{{ computerInfo?.memoryUsage }}%</el-descriptions-item>
+        <el-descriptions-item label="磁盘利用率：">{{ computerInfo?.diskUsage }}%</el-descriptions-item>
+        <el-descriptions-item label="安装状态：">
+          {{computerInfo?.status===0 ? "离线" : "在线" }}
+        </el-descriptions-item>
       </el-descriptions>
 
       <div class="uninstall-btn">
-        <el-button type="primary" class="uninstall-btn" @click="handleUninstall">客户端卸载</el-button>
+        <el-button type="primary" class="uninstall-btn" :disabled="!computerInfo?.id" @click="handleUninstall">客户端卸载</el-button>
       </div>
     </el-aside>
     <el-main>
@@ -35,7 +37,7 @@
 import { onMounted, ref, watch } from 'vue';
 import { computerApi } from '@/api'
 import EditableInput from '@/components/EditableInput.vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 const props = defineProps({
   node: {
     type: Object,
@@ -78,6 +80,13 @@ const handleNameChange = async (val: string) => {
 }
 // 卸载客户端
 const handleUninstall = async () => {
+  // 二次确认
+  const res = await ElMessageBox.confirm('确认卸载客户端？', '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning', 
+  })
+  if (res !== 'confirm') return
   await computerApi.uninstallComputerInfoApi({
     id: props.node.id
   })

@@ -8,21 +8,21 @@
     </div> -->
     <el-tabs v-model="activeTab">
       <el-tab-pane :label="`全部（${statisticsObject?.allCount ?? 0}）`" name="tab1">
-        <ChatBox v-if="selectedFriend" :friend="selectedFriend" />
+        <ChatBox v-if="selectedFriend" :node="node" :friend="selectedFriend" />
       </el-tab-pane>
       <el-tab-pane :label="`搜索结果（${searchCount ?? 0}）`" name="search">
         <div v-if="selectedFriend" class="search-layout">
           <SearchList ref="searchListRef" class="search-left" :messages="searchList" :keyword="searchQuery"
             @select="handleSkipToMessage" />
-          <!-- <ChatBox ref="searchBoxRef" class="search-right" v-if="selectedFriend" :friend="selectedFriend" /> -->
+          <ChatBox ref="searchBoxRef" class="search-right" v-if="selectedFriend" :node="node" :friend="selectedFriend" />
         </div>
       </el-tab-pane>
-      <!-- <el-tab-pane :label="`资金（${statisticsObject?.fundCount ?? 0}）`" name="tab2">
+      <el-tab-pane :label="`资金（${statisticsObject?.fundCount ?? 0}）`" name="tab2">
       </el-tab-pane>
       <el-tab-pane :label="`文件（${statisticsObject?.fileCount ?? 0}）`" name="tab3">
       </el-tab-pane>
       <el-tab-pane :label="`位置（${statisticsObject?.positionCount ?? 0}）`" name="tab4">
-      </el-tab-pane> -->
+      </el-tab-pane>
     </el-tabs>
   </main>
 </template>
@@ -35,7 +35,12 @@ import ChatTabContent from './chat';
 import { Search } from '@element-plus/icons-vue';
 import { imApi } from '@/api';
 import ChatBox from '@/components/ChatBox.vue'
-const props = defineProps<{ selectedFriend: IFriendItem | null, }>();
+const props = defineProps<{
+  selectedFriend: IFriendItem | null,
+  searchQuery: string,
+  selectedDate: any,
+  node: IComputerTreeNode,
+}>();
 
 // 统计数据
 const statisticsObject = ref<IStatisticsObject>()
@@ -61,7 +66,9 @@ watch(() => props.selectedFriend?.id, async () => {
   immediate: true
 })
 // 搜索
-const searchCount = ref<number>(0);
+const searchCount = computed(() => {
+  return searchList.value.length
+})
 const searchList = ref<IGetObjectChatSearchData[]>([]);
 
 
@@ -85,19 +92,19 @@ const handleActiveTabChange = async (tab: string, content: string, date: Array<a
   const list = await imApi.getChatSearchApi({
     objectId: props.selectedFriend?.id,
     content: content,
-    size: 2,
+    size: 10,
     beginTime: date ? dayjs(date[0]).format('YYYY-MM-DD 00:00:00') : '',
     endTime: date ? dayjs(date[1]).format('YYYY-MM-DD 23:59:59') : '',
   });
   searchList.value = list;
-  searchCount.value = list.length;
+  // searchCount.value = list.length;
   await nextTick();
   // 选中第一个
   if (list.length > 0) {
     searchQuery.value = content;
     searchListRef.value?.selectItem(list[0])
   }
-  
+
 }
 defineExpose({
   handleActiveTabChange,

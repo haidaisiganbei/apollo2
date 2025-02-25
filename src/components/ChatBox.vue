@@ -10,7 +10,7 @@
             <span class="time">{{ message.createTime }}</span>
           </div>
           <div class="message-content">
-            <Message :record="message" />
+            <Message :record="message" :friend="friend" />
           </div>
         </div>
       </template>
@@ -30,6 +30,7 @@ import { ref, defineProps, withDefaults, reactive, watch, nextTick } from 'vue';
 import Message from './Message/index.vue';
 interface IProps {
   friend: IFriendItem;
+  node: IComputerTreeNode;
 }
 
 interface IGetObjectChatSearchData {
@@ -44,7 +45,7 @@ const props = withDefaults(defineProps<IProps>(), {});
 const messages = ref<IChatDataResponse>();
 const page = reactive({
   current: 1,
-  size: 2,
+  size: 10,
 })
 const messageRefs = ref<HTMLElement[]>([]);
 const highlightedMessageId = ref<string | null>(null);
@@ -54,7 +55,8 @@ const initMessages = async () => {
     if (!props.friend?.id) return;
     messages.value = await imApi.getMessageList({
       objectId: props.friend?.id,
-      ...page
+      ...page,
+      computerId: String(props.node.id),
     })
     scrollToTop();
   } catch (error) {

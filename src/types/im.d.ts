@@ -19,6 +19,7 @@ declare global {
     content?: string;
     beginTime?: string;
     endTime?: string;
+    computerId: string;
   }
 
   /* 好友对象 */
@@ -68,6 +69,7 @@ declare global {
     size: number;
     current: number;
     objectId: number;
+    computerId: string;
   }
   /* 聊天数据响应 */
   interface IChatDataResponse {
@@ -100,6 +102,7 @@ declare global {
     content: string;
     msgType: number;
     createTime: string;
+    computerId: string;
   }
 
   interface IGetAccountListParamsByComputerIdResponse extends IBase<IAccountListItem[]> { }
@@ -118,7 +121,7 @@ declare global {
     /* 扩展信息 */
     extend: string;
   }
-  
+
   interface IGetObjectChatSearchDataParams {
     /* 每页数量 */
     size: number;
@@ -137,6 +140,16 @@ declare global {
     createTime: string;
     current: number;
     pagePosition: number;
+  }
+  /* 获取对象单条聊天数据请求参数 */
+  interface IGetObjectChatDetailParams {
+    size: number;
+    current: number;
+    computerId: number;
+    objectId: number;
+    beginTime?: string;
+    endTime?: string;
+    msgTypeList?: number[];
   }
 }
 

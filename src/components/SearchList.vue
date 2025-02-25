@@ -40,7 +40,11 @@ const selectedItem = ref<IGetObjectChatSearchData | null>(null)
 const highlightKeyword = (text: string) => {
   if (!props.keyword) return text
   const regex = new RegExp(`(${props.keyword})`, 'gi')
-  return text.replace(regex, '<span style="color:red">$1</span>')
+  try {
+    return text.replace(regex, '<span style="color:red">$1</span>')
+  } catch (error) {
+    return text    
+  }
 }
 
 // Function to select an item

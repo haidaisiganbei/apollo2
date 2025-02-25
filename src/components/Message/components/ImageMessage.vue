@@ -4,8 +4,12 @@
       <img v-if="isDownloadSuccess" :src="imageUrl" alt="下载的图片" />
       <div v-else class="placeholder-container">
         <!-- <PictureFilled class="placeholder-icon" /> -->
-         <div>图片</div>
-        <button @click="downloadImage" class="download-button">下载</button>
+        <div>图片</div>
+        <button v-if="!isDownloading" @click="downloadImage" class="download-button">下载</button>
+        <div v-else class="downloading">
+          <LoadingIcon class="loading-icon" />
+          正在下载...
+        </div>
         <span class="image-size">{{ formatFileSize(content.image.size) }}</span>
       </div>
     </div>
@@ -14,10 +18,13 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { PictureFilled } from '@element-plus/icons-vue';
+import { PictureFilled, Loading } from '@element-plus/icons-vue';
 import { formatFileSize } from '@/utils/util';
+import { imApi } from '@/api';
+
 const props = defineProps<{
-  record: IRecord
+  record: IRecord,
+  friend: IFriendItem,
 }>();
 
 const content = computed(() => {
@@ -31,16 +38,46 @@ const content = computed(() => {
 const isDownloadSuccess = computed(() => content.value.status === 3);
 
 const imageUrl = ref('');
+const isDownloading = ref(false);
 
 const downloadImage = async () => {
+  isDownloading.value = true;
   try {
-    // 这里调用你的接口获取图片URL，假设接口返回的URL为response.data.url
-    const response = await fetch(`/api/download-image/${props.record.id}`);
-    const data = await response.json();
-    imageUrl.value = data.url;
+    const res = await imApi.downloadMessageFileApi({
+      id: props.record.id,
+      computerId: props.record.computerId,
+    });
+    // Start polling the message status
+    pollMessageStatus();
   } catch (error) {
+    isDownloading.value = false;
     console.error('下载图片失败', error);
   }
+};
+
+const pollMessageStatus = () => {
+  const intervalId = setInterval(async () => {
+    console.log('轮询消息状态');
+    try {
+      const res = await imApi.getChatRecordApi({
+        size: 1,
+        current: 1,
+        computerId: Number(props.record.computerId),
+        objectId: Number(props.friend.id),
+      });
+      const newContent = JSON.parse(res.content);
+      if (newContent.status === 3) {
+        clearInterval(intervalId);
+        content.value = newContent;
+        imageUrl.value = newContent.image.url;
+        isDownloading.value = false;
+      }
+    } catch (error) {
+      clearInterval(intervalId);
+      isDownloading.value = false;
+      console.error('获取消息状态失败', error);
+    }
+  }, 3000); // Poll every 3 seconds
 };
 </script>
 
@@ -97,6 +134,24 @@ const downloadImage = async () => {
 
 .download-button:hover {
   background-color: #66b1ff;
+}
+
+.downloading {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.loading-icon {
+  font-size: 24px;
+  margin-right: 5px;
+  animation: spin 1s linear infinite;
+  color: #409EFF;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .image-size {

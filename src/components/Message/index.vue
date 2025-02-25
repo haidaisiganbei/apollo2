@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component :is="componentName" :record="record" />
+    <component :is="componentName" :record="record" :friend="friend"/>
   </div>
 </template>
 
@@ -8,6 +8,7 @@
 import messsageProvider from './messsageProvider';
 const props = defineProps<{
   record: IRecord;
+  friend:IFriendItem
 }>()
 const componentName = messsageProvider.getMessageTypeComponent(String(props.record.msgType))
 </script>

@@ -8,7 +8,9 @@
           end-placeholder="结束日期" class="date-picker" />
         <el-button style="margin-left: 10px;" type="primary" @click="handleSearch">搜索</el-button>
       </div>
-      <ChatWindow ref="chatWindowRef" :selectedFriend="selectedFriend" :node="node" />
+      <ChatWindow ref="chatWindowRef" :selectedFriend="selectedFriend" :node="node"
+        :searchQuery="searchQuery" :selectedDate="selectedDate" 
+      />
     </div>
   </div>
 </template>
@@ -26,8 +28,9 @@ defineProps(['node'])
 const selectedFriend = ref<IFriendItem | null>(null);
 
 
-const selectFriend = (friend: IFriendItem) => {
+const selectFriend = async(friend: IFriendItem) => {
   selectedFriend.value = friend;
+  await nextTick();
   // 加载选中好友的聊天记录，省略实现
   chatWindowRef.value?.handleActiveTabChange(undefined, searchQuery.value, selectedDate.value)
 };

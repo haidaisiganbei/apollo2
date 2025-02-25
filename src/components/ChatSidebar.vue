@@ -60,7 +60,8 @@ const friends = ref<IFriendItem[]>([]);
 watch(() => activeAccount.value, async () => {
   if (!activeAccount.value) return;
   friends.value = await imApi.getFriendList({
-    accountId: activeAccount.value
+    accountId: activeAccount.value,
+    computerId: String(props.node.id)
   })
   // 选中第一个好友
   selectFriend(friends.value[0]);

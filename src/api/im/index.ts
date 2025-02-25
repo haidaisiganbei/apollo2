@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-
+import qs from 'qs';
 const baseURL = '/cluster-apollo/apollo/im'
 
 // 获取计算机对应的账号列表
@@ -43,4 +43,40 @@ export const getChatSearchApi = async (data: IGetObjectChatSearchDataParams):Pro
     method: 'post',
     data 
   }) 
+}
+
+/**
+ * 下载消息对应附件
+ */
+export const downloadMessageFileApi = async (data: {id:number,computerId:string}):Promise<IRecord> => {
+  return request({
+    url: `${baseURL}/op/downloadChatFile`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 获取消息对应附件数据
+ */
+export const getMessageFileApi = async (params: {id:number,computerId:string}):Promise<any> => {
+  return request({
+    url: `${baseURL}/getChatAttachment?${qs.stringify(params)}`,
+    method: 'get',
+    // data:qs.stringify(params),
+    responseType: 'blob',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  }) 
+}
+/**
+ * 获取对象单条聊天记录
+ */
+export const getChatRecordApi = async (data:IGetObjectChatDetailParams ):Promise<IRecord> => {
+  return request({
+    url: `${baseURL}/getObjectChatDetail`,
+    method: 'post',
+    data 
+  })
 }
