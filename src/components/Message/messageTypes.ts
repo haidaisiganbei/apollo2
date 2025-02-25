@@ -17,7 +17,7 @@ import UnknownMessage from './components/UnknownMessage.vue';
 const messageTypes: Record<string, { name: string, component: any }> = {
   "1": { name: "文本", component: TextMessage },
   "2": { name: "图片", component: ImageMessage },
-  // "3": { name: "音频", component: AudioMessage },
+  "3": { name: "音频", component: AudioMessage },
   "4": { name: "视频", component: VideoMessage },
   "5": { name: "链接", component: LinkMessage },
   // "6": { name: "红包", component: RedEnvelopeMessage },

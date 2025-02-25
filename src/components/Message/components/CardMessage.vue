@@ -17,16 +17,6 @@
 import { computed } from 'vue';
 import { Avatar as AvatarIcon } from '@element-plus/icons-vue';
 
-interface IRecord {
-  id: number;
-  senderUniqueName: string;
-  senderName: string;
-  selfFlag: boolean;
-  content: string;
-  msgType: number;
-  createTime: string;
-}
-
 const props = defineProps<{
   record: IRecord;
 }>();

@@ -92,7 +92,7 @@ const handleActiveTabChange = async (tab: string, content: string, date: Array<a
   const list = await imApi.getChatSearchApi({
     objectId: props.selectedFriend?.id,
     content: content,
-    size: 10,
+    size: 50,
     beginTime: date ? dayjs(date[0]).format('YYYY-MM-DD 00:00:00') : '',
     endTime: date ? dayjs(date[1]).format('YYYY-MM-DD 23:59:59') : '',
   });

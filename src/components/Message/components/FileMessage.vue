@@ -8,11 +8,11 @@
       <Download @click="handleDownload" />
     </el-icon>
     <el-icon v-if="content.status === 1&&isDownloading" class="file-icon">
-      <Loading @click="handleDownload" />
+      <Loading  />
     </el-icon>
-    <!-- <el-icon v-if="content.status === 2" class="file-icon">
-      <Files  @click="handleDownload" />
-    </el-icon> -->
+    <el-icon v-if="content.status === 2" class="file-icon">
+      <Download  @click="handleDownload" />
+    </el-icon>
     <el-icon v-if="content.status === 3" class="file-icon" @click="handlePreview">
       <Files />
     </el-icon>
@@ -57,7 +57,7 @@ const pollMessageStatus = () => {
         size: 1,
         current: 1,
         computerId: Number(props.record.computerId),
-        objectId: Number(props.record.id),
+        id: Number(props.record.id),
       });
       const newContent = JSON.parse(res.content);
       if (newContent.status === 3) {

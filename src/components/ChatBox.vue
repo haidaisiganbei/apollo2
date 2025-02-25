@@ -44,7 +44,7 @@ const props = withDefaults(defineProps<IProps>(), {});
 const messages = ref<IChatDataResponse>();
 const page = reactive({
   current: 1,
-  size: 10,
+  size: 50,
 })
 const messageRefs = ref<HTMLElement[]>([]);
 const highlightedMessageId = ref<string | null>(null);
@@ -96,20 +96,30 @@ const scrollToTop = () => {
   }
 };
 const handleSkip = async (message: IGetObjectChatSearchData) => {
-  // 添加高亮效果
-  highlightedMessageId.value = message.id;
+  // debugger
+  // // 添加高亮效果
+  // highlightedMessageId.value = message.id;
 
-  // 1秒后清除高亮
-  highlightedMessageId.value = null;
-  // 跳转到指定消息
+  // // 1秒后清除高亮
+  // highlightedMessageId.value = null;
+  // // 跳转到指定消息
   page.current = message.current;
-  await initMessages();
+  // await initMessages();
+  messages.value = await imApi.getMessageList({
+    objectId: props.friend?.id,
+    ...page,
+    computerId: String(props.node.id),
+  })
   await nextTick();
   // const targetMessage = messageRefs.value.find(el => el.textContent?.includes(message.content));
   const targetMessage = messageRefs.value[message.pagePosition - 1];
+  console.log(targetMessage);
+
   // debugger
   if (targetMessage) {
     highlightedMessageId.value = messages.value?.records[message.pagePosition - 1].id || null;
+    console.log(highlightedMessageId.value);
+
     targetMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
@@ -176,10 +186,11 @@ defineExpose({
 }
 
 .middle {
-  .message-header.other-header{
-    
+  .message-header.other-header {
+
     justify-content: center !important;
   }
+
   .message-content {
     display: flex;
     align-items: center;
