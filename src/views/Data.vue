@@ -28,7 +28,7 @@ import WechatWeb from './data/WechatWeb.vue';
 import Telegram from './data/Telegram.vue';
 import { ref, onMounted, shallowRef } from 'vue'
 import { computerApi } from '@/api'
-const activeName = ref('Wechat')
+const activeName = ref('Policy')
 
 const handleClick = (tab, event) => {
   console.log(tab, event)

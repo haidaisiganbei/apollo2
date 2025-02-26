@@ -12,6 +12,8 @@ import LocationMessage from './components/LocationMessage.vue';
 import EmojiMessage from './components/EmojiMessage.vue';
 import DevMessage from './components/DevMessage.vue';
 import SystemMessage from './components/SystemMessage.vue';
+import ReferenceMessage from './components/ReferenceMessage.vue';
+import MergeMessage from './components/MergeMessage.vue';
 import UnknownMessage from './components/UnknownMessage.vue';
 
 const messageTypes: Record<string, { name: string, component: any }> = {
@@ -81,9 +83,9 @@ const messageTypes: Record<string, { name: string, component: any }> = {
   // "75": { name: "分享", component: UnknownMessage },
   // "76": { name: "文件夹", component: UnknownMessage },
   // "77": { name: "戳一戳", component: UnknownMessage },
-  // "78": { name: "合并聊天记录", component: UnknownMessage },
+  "78": { name: "合并聊天记录", component: MergeMessage },
   // "79": { name: "群推荐", component: UnknownMessage },
-  // "80": { name: "引用回复", component: UnknownMessage },
+  "80": { name: "引用回复", component: ReferenceMessage },
   // "81": { name: "游戏", component: UnknownMessage },
   // "82": { name: "文档", component: UnknownMessage },
   // "83": { name: "压缩文件", component: UnknownMessage },

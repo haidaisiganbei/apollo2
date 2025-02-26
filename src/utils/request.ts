@@ -36,9 +36,6 @@ service.interceptors.response.use(
       return response;
     }
     if (res.code !== 0) {
-      // 这里可以根据实际情况进行处理，比如显示错误信息
-      // 如果是文件流，直接返回响应数据
-     
       console.error('Error:', res.message);
       ElMessage.error(res.error || 'Error');
       return Promise.reject(new Error(res.message || 'Error'));

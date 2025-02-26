@@ -7,8 +7,10 @@
         <div>图片</div>
         <button v-if="!isDownloading" @click="downloadImage" class="download-button">下载</button>
         <div v-else class="downloading">
-          <LoadingIcon class="loading-icon" />
-          正在下载...
+          <el-icon :size="24">
+            <Loading class="loading-icon" />
+          </el-icon>
+          <span>正在下载...</span>
         </div>
         <span class="image-size">{{ formatFileSize(content?.image?.size ?? 0) }}</span>
       </div>
@@ -176,7 +178,6 @@ const pollMessageStatus = () => {
 }
 
 .loading-icon {
-  font-size: 24px;
   margin-right: 5px;
   animation: spin 1s linear infinite;
   color: #409EFF;
