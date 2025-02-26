@@ -1,47 +1,78 @@
 <template>
   <div class="file-message">
     <div class="file-info">
-      <div class="file-name">{{ content.title }}</div>
-      <div class="file-size">{{ formatFileSize(content.attachment.size) }}</div>
+      <div class="file-name">{{ content?.title }}</div>
+      <div class="file-size">{{ formatFileSize(content?.attachment?.size??0) }}</div>
     </div>
-    <el-icon v-if="!content.status&&!isDownloading" class="file-icon">
+    <el-icon v-if="!content?.status && !isDownloading" class="file-icon">
       <Download @click="handleDownload" />
     </el-icon>
-    <el-icon v-if="content.status === 1&&isDownloading" class="file-icon">
-      <Loading  />
+    <el-icon v-if="content?.status === 1 && isDownloading" class="file-icon">
+      <Loading />
     </el-icon>
-    <el-icon v-if="content.status === 2" class="file-icon">
-      <Download  @click="handleDownload" />
+    <el-icon v-if="content?.status === 2" class="file-icon">
+      <Download @click="handleDownload" />
     </el-icon>
-    <el-icon v-if="content.status === 3" class="file-icon" @click="handlePreview">
+    <el-icon v-if="content?.status === 3" class="file-icon" @click="handlePreview">
       <Files />
     </el-icon>
   </div>
+  <div class="error">{{ content?.errMsg }}</div>
 </template>
 
 <script setup lang="ts">
 import { imApi } from '@/api';
-import { formatFileSize } from '@/utils/util'
+import { formatFileSize, getUrl } from '@/utils/util'
 import { Files, Download, Loading } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus';
 import qs from 'qs'
 const props = defineProps<{
   record: IRecord;
 }>()
-const content = computed(() => {
-  try {
-    const content = JSON.parse(props.record.content)
-    return content
-  } catch (error) {
-    return props.record.content
-  }
-})
 
+const content = ref()
+const isDownloadSuccess = computed(() => content?.value?.status === 3);
+// const content = computed(() => {
+//   try {
+//     const content = JSON.parse(props.record.content)
+//     return content
+//   } catch (error) {
+//     return props.record.content
+//   }
+// })
+const imageUrl = ref('');
+
+onMounted(() => {
+  try {
+    content.value = JSON.parse(props.record.content);
+  } catch (error) {
+    content.value = {
+      "attachment": {
+        "size": 0
+      },
+      "bottomText": "",
+      "description": "",
+      "errMsg": "",
+      "status": null,
+      "title": ""
+    };
+  }
+  if (content.value.status === 3) {
+    const params = {
+      id: props.record.id,
+      computerId: props.record.computerId,
+    }
+    imageUrl.value = getUrl(params);
+  }
+  // errorMsg.value = content.value.errMsg;
+})
 const fileIcon = computed(() => {
   const fileType = content.value.fileType || 'unknown'
   return `/assets/file-icons/${fileType}.png`
 })
 
 const handleDownload = async () => {
+  console.log(props.record);
   const res = await imApi.downloadMessageFileApi({
     id: props.record.id,
     computerId: props.record.computerId,
@@ -56,10 +87,16 @@ const pollMessageStatus = () => {
       const res = await imApi.getChatRecordApi({
         size: 1,
         current: 1,
-        computerId: Number(props.record.computerId),
-        id: Number(props.record.id),
+        computerId: props.record.computerId,
+        id: props.record.id,
       });
       const newContent = JSON.parse(res.content);
+      if (newContent.status === 2) {
+        clearInterval(intervalId);
+        isDownloading.value = false;
+        content.value = newContent;
+        ElMessage.error(newContent.errMsg);
+      }
       if (newContent.status === 3) {
         clearInterval(intervalId);
         isDownloading.value = false;
@@ -75,16 +112,12 @@ const handlePreview = async () => {
   console.log('预览');
 
   try {
-
-    // const res = await imApi.getMessageFileApi({
-    // })
     const params = {
       id: props.record.id,
       computerId: props.record.computerId,
     }
     window.open(`${import.meta.env.VITE_APP_BASE_API}/cluster-apollo/apollo/im/getChatAttachment?${qs.stringify(params)}`)
   } catch (error) {
-
     console.log(error);
   }
 
@@ -94,7 +127,7 @@ const handlePreview = async () => {
 
 <style scoped>
 .file-message {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   padding: 10px;
   border: 1px solid #ccc;
@@ -126,5 +159,10 @@ const handlePreview = async () => {
   color: #999;
   font-size: 12px;
   margin-top: 12px;
+}
+.error {
+  color: red;
+  margin-top: 10px;
+  font-size: 12px;
 }
 </style>

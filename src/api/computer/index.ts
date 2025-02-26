@@ -1,5 +1,7 @@
 import request from '@/utils/request';
+import qs from 'qs'
 const baseURL = '/cluster-apollo/apollo/computer'
+
 
 /**
  * 获取计算机树结构
@@ -99,4 +101,33 @@ export const sortComputerApi = async (data: IComputerSortParams) => {
     method: 'post',
     data: data
   });
+}
+
+/**
+ * 导出安装包
+ */
+export const exportInstallerApi = async (data: { ipAddress: string }) => {
+  return request({
+    url: `${baseURL}/op/exportAgent?${qs.stringify(data)}`,
+    method: 'get',
+    // params:qs.stringify(data),
+    responseType: 'blob',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+/**
+ * 桌面图片
+ */
+export const getComputerDesktopImgApi = async (data: {
+  id: number,
+  quality: number
+}):Promise<{imageData:string}> => {
+  return request({
+    url: `${baseURL}/getScreenShot`,
+    method: 'post',
+    data
+  })
 }

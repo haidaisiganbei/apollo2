@@ -56,6 +56,7 @@ const initStatistics = async () => {
   } else {
     statisticsObject.value = await imApi.getStatisticsObject({
       objectId: props.selectedFriend?.id,
+      computerId: props.node.id,
     })
   }
 
@@ -91,6 +92,7 @@ const handleActiveTabChange = async (tab: string, content: string, date: Array<a
   }
   const list = await imApi.getChatSearchApi({
     objectId: props.selectedFriend?.id,
+    computerId: props.node.id,
     content: content,
     size: 50,
     beginTime: date ? dayjs(date[0]).format('YYYY-MM-DD 00:00:00') : '',

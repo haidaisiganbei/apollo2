@@ -48,6 +48,7 @@ declare global {
   interface IStatisticsObjectParams {
     /* 对象id */
     objectId: number;
+    computerId: string;
     /* 开始时间（天） */
     beginTime?: string;
     /* 结束时间（天） */
@@ -125,8 +126,9 @@ declare global {
   interface IGetObjectChatSearchDataParams {
     /* 每页数量 */
     size: number;
+    computerId: string;
     /* 对象id */
-    objectId: number;
+    computerId: string;
     /* 搜索内容 */
     content?: string;
     /* 开始时间 */

@@ -117,7 +117,7 @@ const handleSkip = async (message: IGetObjectChatSearchData) => {
 
   // debugger
   if (targetMessage) {
-    highlightedMessageId.value = messages.value?.records[message.pagePosition - 1].id || null;
+    highlightedMessageId.value = messages.value?.records[message.pagePosition - 1]?.id || null;
     console.log(highlightedMessageId.value);
 
     targetMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
