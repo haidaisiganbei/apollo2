@@ -1,15 +1,19 @@
 <template>
-  <div :class="['text-message', { 'self': props.record.selfFlag, 'other': !props.record.selfFlag }]">
-    <div :class="['message-bubble', { 'self-bubble': props.record.selfFlag, 'other-bubble': !props.record.selfFlag }]">
-      {{ text }}
-      <span :class="['arrow', { 'self-arrow': props.record.selfFlag, 'other-arrow': !props.record.selfFlag }]"></span>
+  <div>
+    <div :class="['text-message', { 'self': props.record.selfFlag, 'other': !props.record.selfFlag }]">
+      <div
+        :class="['message-bubble', { 'self-bubble': props.record.selfFlag, 'other-bubble': !props.record.selfFlag }]">
+        {{ text }}
+        <span :class="['arrow', { 'self-arrow': props.record.selfFlag, 'other-arrow': !props.record.selfFlag }]"></span>
+      </div>
+    </div>
+    <!-- 引用内容 -->
+    <div v-if="quoteContent" class="quote-content">
+      <span class="quote-name">{{ content?.quoteUser?.name }}:</span>
+      <span class="quote-text">{{ quoteContent }}</span>
     </div>
   </div>
-  <!-- 引用内容 -->
-  <div v-if="quoteContent" class="quote-content">
-    <span class="quote-name">{{ content?.quoteUser?.name }}:</span>
-    <span class="quote-text">{{ quoteContent }}</span>
-  </div>
+
 </template>
 
 <script setup lang="ts">
@@ -94,9 +98,10 @@ const quoteContent = computed(() => {
 }
 
 .quote-content {
+  display: inline-block;
   margin-top: 10px;
   padding: 10px;
-  background-color: #f1f1f1;
+  background-color: #cdcdcd;
   border-radius: 4px;
 }
 </style>

@@ -53,6 +53,7 @@ declare module 'vue' {
     Message: typeof import('./../components/Message/index.vue')['default']
     MessageComponent: typeof import('./../components/chat/MessageComponent.vue')['default']
     MessagesList: typeof import('./../components/chat/MessagesList.vue')['default']
+    MiniProgrameMessage: typeof import('./../components/Message/components/MiniProgrameMessage.vue')['default']
     RedEnvelopeMessage: typeof import('./../components/Message/components/RedEnvelopeMessage.vue')['default']
     ReferenceMessage: typeof import('./../components/Message/components/ReferenceMessage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

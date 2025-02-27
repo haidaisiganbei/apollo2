@@ -1,21 +1,21 @@
 <template>
-  <!-- <div class="image-message">
-  </div> -->
-  <div class="image-container" >
-    <el-image v-if="isDownloadSuccess" style="width: 100px; height: 100px" :src="imageUrl"
-      :preview-src-list="[imageUrl]" fit='cover' />
-    <div v-else class="placeholder-container">
-      <!-- <PictureFilled class="placeholder-icon" /> -->
-      <div>表情</div>
-      <button v-if="!isDownloading" @click="downloadImage" class="download-button">下载</button>
-      <div v-else class="downloading">
-        <LoadingIcon class="loading-icon" />
-        正在下载...
+  <div style="width: 240px;">
+    <div class="image-container">
+      <el-image v-if="isDownloadSuccess" style="width: 100px; height: 100px" :src="imageUrl"
+        :preview-src-list="[imageUrl]" fit='cover' />
+      <div v-else class="placeholder-container">
+        <!-- <PictureFilled class="placeholder-icon" /> -->
+        <div>表情</div>
+        <button v-if="!isDownloading" @click="downloadImage" class="download-button">下载</button>
+        <div v-else class="downloading">
+          <LoadingIcon class="loading-icon" />
+          正在下载...
+        </div>
+        <span class="image-size">{{ formatFileSize(content?.image?.size ?? 0) }}</span>
       </div>
-      <span class="image-size">{{ formatFileSize(content?.image?.size??0) }}</span>
     </div>
+    <div class="error">{{ content?.errMsg }}</div>
   </div>
-  <div class="error">{{ content?.errMsg }}</div>
 </template>
 
 <script setup lang="ts">
@@ -116,9 +116,6 @@ const pollMessageStatus = () => {
 </script>
 
 <style scoped>
-/* .image-message {
-  width: 100%;
-} */
 
 .image-container {
   display: inline-block;
@@ -172,6 +169,7 @@ const pollMessageStatus = () => {
   font-size: 14px;
   color: #606266;
 }
+
 .error {
   color: red;
   margin-top: 10px;

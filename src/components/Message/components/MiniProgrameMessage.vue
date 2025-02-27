@@ -1,7 +1,7 @@
 <template>
   <div class="mini-message" @click="handleClick">
     <div class="title">
-      <span class="avatar"></span>
+      <!-- <span class="avatar"></span> -->
       <span class="text">
         {{ content?.title }}
       </span>
@@ -10,7 +10,7 @@
       {{ content?.description }}
     </div>
     <div class="footer">
-      <div class="footer-text">{{ content?.bottomText || '小程序' }}</div>
+      <div class="footer-text">{{ content?.bottomText }}</div>
     </div>
   </div>
 </template>
@@ -78,7 +78,7 @@ const handleClick = () => {
     font-size: 12px;
     color: #999;
     border-top: 1px solid #e5e5e5;
-
+    height: 20px;
   }
 }
 </style>

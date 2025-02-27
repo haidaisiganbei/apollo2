@@ -101,7 +101,7 @@ const isFiltering = computed(() => filterText.value.length > 0)
 
 // 过滤方法
 const filterNode = ({newText,newStatus}:{newText:string,newStatus:number}, data) => {
-  const value = newText.trim()
+  const value = newText?.trim?.()
   if(!value){
     // 处理状态
     if(newStatus == -1){
