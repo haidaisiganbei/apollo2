@@ -26,3 +26,9 @@ export function formatFileSize(size: number,digit:number=1): string {
 export function getUrl(params:any):string{
   return `${import.meta.env.VITE_APP_BASE_API}/cluster-apollo/apollo/im/getChatAttachment?${qs.stringify(params)}` 
 }
+/**
+ * 休眠函数
+ */
+export function sleep(ms:number) {
+  return new Promise(resolve => setTimeout(resolve, ms)); 
+}

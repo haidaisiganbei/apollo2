@@ -2,15 +2,15 @@
   <div class="file-message">
     <div class="file-info">
       <div class="file-name">{{ content?.title }}</div>
-      <div class="file-size">{{ formatFileSize(content?.attachment?.size??0) }}</div>
+      <div class="file-size">{{ formatFileSize(content?.attachment?.size ?? 0) }}</div>
     </div>
     <el-icon v-if="!content?.status && !isDownloading" class="file-icon">
       <Download @click="handleDownload" />
     </el-icon>
-    <el-icon v-if="content?.status === 1 && isDownloading" class="file-icon">
+    <el-icon v-if="isDownloading" class="loading-icon">
       <Loading />
     </el-icon>
-    <el-icon v-if="content?.status === 2" class="file-icon">
+    <el-icon v-if="!isDownloading && content?.status === 2" class="file-icon">
       <Download @click="handleDownload" />
     </el-icon>
     <el-icon v-if="content?.status === 3" class="file-icon" @click="handlePreview">
@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { imApi } from '@/api';
-import { formatFileSize, getUrl } from '@/utils/util'
+import { formatFileSize, getUrl, sleep } from '@/utils/util'
 import { Files, Download, Loading } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus';
 import qs from 'qs'
@@ -66,11 +66,17 @@ const fileIcon = computed(() => {
 
 const handleDownload = async () => {
   console.log(props.record);
-  const res = await imApi.downloadMessageFileApi({
-    id: props.record.id,
-    computerId: props.record.computerId,
-  })
-  pollMessageStatus()
+  try {
+    isDownloading.value = true;
+    await sleep(3000)
+    const res = await imApi.downloadMessageFileApi({
+      id: props.record.id,
+      computerId: props.record.computerId,
+    })
+    pollMessageStatus()
+  } catch (error) {
+    isDownloading.value = false;
+  }
 }
 const isDownloading = ref(false);
 const pollMessageStatus = () => {
@@ -80,7 +86,7 @@ const pollMessageStatus = () => {
       const res = await imApi.getChatRecordApi({
         size: 1,
         current: 1,
-        computerId: props.record.computerId,
+        computerId: Number(props.record.computerId),
         id: props.record.id,
       });
       const newContent = JSON.parse(res.content);
@@ -138,6 +144,24 @@ const handlePreview = async () => {
   cursor: pointer;
 }
 
+.loading-icon {
+  margin-right: 5px;
+  animation: spin 1s linear infinite;
+  font-size: 24px;
+  margin-left: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
 .file-info {
   display: flex;
   flex-direction: column;
@@ -153,6 +177,7 @@ const handlePreview = async () => {
   font-size: 12px;
   margin-top: 12px;
 }
+
 .error {
   color: red;
   margin-top: 10px;
