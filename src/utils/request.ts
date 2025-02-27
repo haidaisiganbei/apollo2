@@ -36,9 +36,8 @@ service.interceptors.response.use(
       return response;
     }
     if (res.code !== 0) {
-      console.error('Error:', res.message);
-      ElMessage.error(res.error || 'Error');
-      return Promise.reject(new Error(res.message || 'Error'));
+      ElMessage.error(res.msg || 'Error');
+      return Promise.reject(new Error(res.msg));
     } else {
       return res.data;
     }
