@@ -60,7 +60,8 @@ defineExpose({
 <style lang='scss' scoped>
 .search-container {
   overflow: hidden;
-  height: 600px;
+  // height: 600px;
+  height: calc(100vh - 270px);
 }
 .search-list {
   display: flex;

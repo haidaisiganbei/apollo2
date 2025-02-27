@@ -47,6 +47,7 @@ const currentComputer = ref(null)
 const handleNodeClicked = (node) => {
   console.log('节点被点击:', node)
   if (node.groupFlag) return
+  activeName.value = 'Policy'
   currentComputer.value = node
 }
 /**

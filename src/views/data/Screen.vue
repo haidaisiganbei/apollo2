@@ -8,18 +8,18 @@
           style="width: 200px;"
           @change="handleQualityChange"
         >
-          <el-option label="画质优先（1080）" :value="0"></el-option>
-          <el-option label="性能优先（360）" :value="1"></el-option>
-          <el-option label="智能推荐" :value="2"></el-option>
+          <el-option label="360P" :value="0"></el-option>
+          <el-option label="480P" :value="1"></el-option>
+          <el-option label="720P" :value="2"></el-option>
+          <el-option label="1080P" :value="3"></el-option>
+          <el-option label="1080PP" :value="4"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
     
     <div class="desktop">
-      <div v-if="isLoading&&!currentImage" class="loading">加载中...</div>
-      <div v-else-if="errorMessage" class="error">{{ errorMessage }}</div>
       <img 
-        v-else
+        v-if="currentImage"
         :src="currentImage" 
         alt="实时画面" 
         class="responsive-image"
@@ -35,7 +35,7 @@ import { computerApi } from '@/api';
 import { debounce } from 'lodash-es';
 
 const props = defineProps(['node']);
-const selectedQuality = ref(0);
+const selectedQuality = ref(3);
 const currentImage = ref('');
 const isLoading = ref(false);
 const errorMessage = ref('');
@@ -43,7 +43,7 @@ const requestId = ref(0);
 const refreshInterval = ref(0); // 刷新间隔标识符
 
 // 防抖处理（300ms）
-const fetchImageDebounced = debounce(fetchImage, 300);
+const fetchImageDebounced = debounce(fetchImage, 300,{ leading: true});
 
 async function fetchImage(quality: number, isManual = false) {
   const currentRequestId = ++requestId.value;
@@ -54,7 +54,7 @@ async function fetchImage(quality: number, isManual = false) {
     const response = await computerApi.getComputerDesktopImgApi({
       quality,
       id: props.node.id,
-      timestamp: new Date().getTime() // 防止缓存
+      // timestamp: new Date().getTime() // 防止缓存
     });
     
     if (currentRequestId === requestId.value) {
@@ -82,16 +82,11 @@ function handleImageError() {
 
 // 定时刷新逻辑
 function startRefreshInterval() {
-  // 根据画质设置不同的刷新频率（单位：毫秒）
-  const intervals = {
-    0: 5000,  // 高清模式5秒刷新
-    1: 3000,  // 性能模式3秒刷新
-    2: 4000   // 智能模式4秒刷新
-  };
+ const time = import.meta.env.PROD ? 2000 : 5000;
   
   refreshInterval.value = window.setInterval(() => {
     fetchImage(selectedQuality.value);
-  }, intervals[selectedQuality.value]);
+  }, time);
 }
 
 function restartRefreshInterval() {
@@ -121,6 +116,8 @@ onUnmounted(() => {
   border: 1px solid #e4e4e4;
   border-radius: 4px;
   overflow: hidden;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
 }
 
 .responsive-image {

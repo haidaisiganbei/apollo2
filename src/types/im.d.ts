@@ -71,6 +71,9 @@ declare global {
     current: number;
     objectId: number;
     computerId: string;
+    beginTime:string ,
+    endTime: string,
+    msgTypeList: number[]
   }
   /* 聊天数据响应 */
   interface IChatDataResponse {

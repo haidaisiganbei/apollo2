@@ -8,9 +8,8 @@
           end-placeholder="结束日期" class="date-picker" />
         <el-button style="margin-left: 10px;" type="primary" @click="handleSearch">搜索</el-button>
       </div>
-      <ChatWindow ref="chatWindowRef" :selectedFriend="selectedFriend" :node="node"
-        :searchQuery="searchQuery" :selectedDate="selectedDate" 
-      />
+      <ChatWindow ref="chatWindowRef" :selectedFriend="selectedFriend" :node="node" :searchQuery="searchQuery"
+        :selectedDate="selectedDate" />
     </div>
   </div>
 </template>
@@ -21,20 +20,19 @@ import { Search } from '@element-plus/icons-vue';
 
 import Sidebar from '@/components/ChatSidebar.vue';
 import ChatWindow from '@/components/ChatWindow.vue';
-import dayjs from 'dayjs';
-import { imApi } from '@/api';
-defineProps(['node'])
+const props = defineProps(['node'])
 
 const selectedFriend = ref<IFriendItem | null>(null);
+provide('computer', props.node);
+provide('friend', selectedFriend);
 
 
-const selectFriend = async(friend: IFriendItem) => {
+const selectFriend = async (friend: IFriendItem) => {
   selectedFriend.value = friend;
   await nextTick();
   // 加载选中好友的聊天记录，省略实现
   chatWindowRef.value?.handleActiveTabChange(undefined, searchQuery.value, selectedDate.value)
 };
-
 
 const sidebarRef = ref();
 
@@ -51,27 +49,10 @@ const searchQuery = ref<string>('');
 const selectedDate = ref('');
 const chatWindowRef = ref();
 const handleSearch = async () => {
-  // if (!selectedFriend?.id) return;
   // 执行搜索前先刷新好友列表
   await handleRefreshAndSelect(searchQuery.value);
-  // await nextTick();
+  await nextTick();
   chatWindowRef.value?.handleActiveTabChange('search', searchQuery.value, selectedDate.value)
-  // const list = await imApi.getChatSearchApi({
-  //   objectId: selectedFriend?.id,
-  //   content: searchQuery.value,
-  //   size: 2,
-  //   beginTime: selectedDate.value ? dayjs(selectedDate.value[0]).format('YYYY-MM-DD 00:00:00') : '',
-  //   endTime: selectedDate.value ? dayjs(selectedDate.value[1]).format('YYYY-MM-DD 23:59:59') : '',
-  // });
-
-  // searchList.value = list;
-  // searchCount.value = list.length;
-  // activeTab.value = 'search';
-
-  // 自动选中第一个搜索结果
-  // if (list.length > 0) {
-  //   handleSkipToMessage(list[0]);
-  // }
 }
 </script>
 

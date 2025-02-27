@@ -1,29 +1,39 @@
 <template>
   <main class="chat-container">
-    <!-- <div class="chat-header">
-      <el-input v-model="searchQuery" placeholder="关键词搜索" :prefix-icon="Search" clearable class="search-input" />
-      <el-date-picker v-model="selectedDate" type="daterange" range-separator="至" start-placeholder="开始日期"
-        end-placeholder="结束日期" class="date-picker" />
-      <el-button style="margin-left: 10px;" type="primary" @click="handleSearch">搜索</el-button>
-    </div> -->
     <el-tabs v-model="activeTab">
       <el-tab-pane :label="`全部（${statisticsObject?.allCount ?? 0}）`" name="tab1">
+      </el-tab-pane>
+      <el-tab-pane :label="`搜索结果（${searchCount ?? 0}）`" name="search" lazy>
+      </el-tab-pane>
+      <el-tab-pane :label="`资金（${statisticsObject?.fundCount ?? 0}）`" name="tab2" lazy>
         <ChatBox v-if="selectedFriend" :node="node" :friend="selectedFriend" />
       </el-tab-pane>
-      <el-tab-pane :label="`搜索结果（${searchCount ?? 0}）`" name="search">
-        <div v-if="selectedFriend" class="search-layout">
-          <SearchList ref="searchListRef" class="search-left" :messages="searchList" :keyword="searchQuery"
-            @select="handleSkipToMessage" />
-          <ChatBox ref="searchBoxRef" class="search-right" v-if="selectedFriend" :node="node" :friend="selectedFriend" />
-        </div>
+      <el-tab-pane :label="`文件（${statisticsObject?.fileCount ?? 0}）`" name="tab3" lazy>
       </el-tab-pane>
-      <el-tab-pane :label="`资金（${statisticsObject?.fundCount ?? 0}）`" name="tab2">
-      </el-tab-pane>
-      <el-tab-pane :label="`文件（${statisticsObject?.fileCount ?? 0}）`" name="tab3">
-      </el-tab-pane>
-      <el-tab-pane :label="`位置（${statisticsObject?.positionCount ?? 0}）`" name="tab4">
+      <el-tab-pane :label="`位置（${statisticsObject?.positionCount ?? 0}）`" name="tab4" lazy>
       </el-tab-pane>
     </el-tabs>
+    <template v-if="activeTab == 'tab1'">
+      <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend" />
+    </template>
+    <template v-if="activeTab == 'search'">
+      <!-- <ChatBox v-if="selectedFriend" :node="node" :friend="selectedFriend" /> -->
+      <div v-if="selectedFriend" class="search-layout">
+        <SearchList ref="searchListRef" class="search-left" :messages="searchList" :keyword="searchQuery"
+          @select="handleSkipToMessage" />
+        <ChatBox ref="searchBoxRef" class="search-right" v-if="selectedFriend" :node="node" :friend="selectedFriend" />
+      </div>
+    </template>
+    <template v-if="activeTab == 'tab2'">
+      <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend"
+      :msg-type="[6,8]"
+      />
+    </template>
+    <template v-if="activeTab == 'tab3'">
+      <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend"
+      :msg-type="[71]"
+      />
+    </template>
   </main>
 </template>
 
@@ -56,7 +66,7 @@ const initStatistics = async () => {
   } else {
     statisticsObject.value = await imApi.getStatisticsObject({
       objectId: props.selectedFriend?.id,
-      computerId: props.node.id,
+      computerId: String(props.node.id),
     })
   }
 

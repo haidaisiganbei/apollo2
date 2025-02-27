@@ -88,7 +88,8 @@ defineExpose({
     if (activeAccount.value) {
       friends.value = await imApi.getFriendList({
         accountId: activeAccount.value,
-        content: keyword
+        content: keyword,
+        computerId: String(props.node.id)
       });
       selectFriend(friends.value[0]);
     }

@@ -32,14 +32,7 @@ const props = defineProps<{
 
 const content = ref()
 const isDownloadSuccess = computed(() => content?.value?.status === 3);
-// const content = computed(() => {
-//   try {
-//     const content = JSON.parse(props.record.content)
-//     return content
-//   } catch (error) {
-//     return props.record.content
-//   }
-// })
+
 const imageUrl = ref('');
 
 onMounted(() => {

@@ -30,6 +30,8 @@ import Message from './Message/index.vue';
 interface IProps {
   friend: IFriendItem;
   node: IComputerTreeNode;
+  initSize?: number;
+  msgType?: Array<any>;
 }
 
 interface IGetObjectChatSearchData {
@@ -39,23 +41,27 @@ interface IGetObjectChatSearchData {
   pagePosition: number;
 }
 
-const props = withDefaults(defineProps<IProps>(), {});
+const props = withDefaults(defineProps<IProps>(), {
+  msgType: () => []
+});
 // 消息
 const messages = ref<IChatDataResponse>();
 const page = reactive({
   current: 1,
-  size: 50,
+  size: props.initSize ?? 50,
 })
 const messageRefs = ref<HTMLElement[]>([]);
 const highlightedMessageId = ref<string | null>(null);
 
 const initMessages = async () => {
   try {
+    messageRefs.value = [];
     if (!props.friend?.id) return;
     messages.value = await imApi.getMessageList({
       objectId: props.friend?.id,
       ...page,
       computerId: String(props.node.id),
+      msgType: props.msgType
     })
     scrollToTop();
   } catch (error) {
@@ -63,7 +69,7 @@ const initMessages = async () => {
   }
 }
 
-const setMessageRefs = (el: HTMLElement) => {
+const setMessageRefs = (el: any) => {
   if (el) {
     messageRefs.value.push(el);
   }
@@ -96,31 +102,27 @@ const scrollToTop = () => {
   }
 };
 const handleSkip = async (message: IGetObjectChatSearchData) => {
-  // debugger
-  // // 添加高亮效果
-  // highlightedMessageId.value = message.id;
-
-  // // 1秒后清除高亮
-  // highlightedMessageId.value = null;
   // // 跳转到指定消息
-  page.current = message.current;
-  // await initMessages();
-  messages.value = await imApi.getMessageList({
-    objectId: props.friend?.id,
-    ...page,
-    computerId: String(props.node.id),
-  })
+  // messages.value = undefined;
   await nextTick();
-  // const targetMessage = messageRefs.value.find(el => el.textContent?.includes(message.content));
+  if (page.current != message.current) {
+    page.current = message.current;
+    messages.value = await imApi.getMessageList({
+      objectId: props.friend?.id,
+      ...page,
+      computerId: String(props.node.id),
+    })
+    await nextTick();
+  }
+  console.log('messageRefs', messageRefs.value);
+
   const targetMessage = messageRefs.value[message.pagePosition - 1];
   console.log(targetMessage);
-
-  // debugger
   if (targetMessage) {
-    highlightedMessageId.value = messages.value?.records[message.pagePosition - 1]?.id || null;
+    highlightedMessageId.value = String(messages.value?.records[message.pagePosition - 1]?.id) || null;
     console.log(highlightedMessageId.value);
-
     targetMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    messageRefs.value = [];
   }
 }
 
@@ -134,15 +136,21 @@ defineExpose({
   height: calc(100vh - 270px);
   min-width: 800px;
   max-width: 1200px;
+  width: 100%;
+  overflow-y: hidden;
   margin: 0 auto;
   border: 1px solid #ccc;
   background-color: #F5F5F5;
 }
 
 .messages {
-  flex: 1;
+  // flex: 1;
+  // height: calc(100% - 200px);
+  height: calc(100vh - 370px);
   padding: 10px;
   overflow-y: auto;
+  // 隐藏滚动条
+  scrollbar-width: none;
 }
 
 .message {
