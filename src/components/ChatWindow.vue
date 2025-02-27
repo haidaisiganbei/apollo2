@@ -6,7 +6,7 @@
       <el-tab-pane :label="`搜索结果（${searchCount ?? 0}）`" name="search" lazy>
       </el-tab-pane>
       <el-tab-pane :label="`资金（${statisticsObject?.fundCount ?? 0}）`" name="tab2" lazy>
-        <ChatBox v-if="selectedFriend" :node="node" :friend="selectedFriend" />
+        <!-- <ChatBox v-if="selectedFriend" :node="node" :friend="selectedFriend" /> -->
       </el-tab-pane>
       <el-tab-pane :label="`文件（${statisticsObject?.fileCount ?? 0}）`" name="tab3" lazy>
       </el-tab-pane>
@@ -32,6 +32,11 @@
     <template v-if="activeTab == 'tab3'">
       <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend"
       :msg-type="[71]"
+      />
+    </template>
+    <template v-if="activeTab == 'tab4'">
+      <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend"
+      :msg-type="[42,57,64]"
       />
     </template>
   </main>

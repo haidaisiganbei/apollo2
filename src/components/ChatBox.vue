@@ -61,7 +61,7 @@ const initMessages = async () => {
       objectId: props.friend?.id,
       ...page,
       computerId: String(props.node.id),
-      msgType: props.msgType
+      msgTypeList: props.msgType
     })
     scrollToTop();
   } catch (error) {
