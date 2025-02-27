@@ -14,6 +14,7 @@ import DevMessage from './components/DevMessage.vue';
 import SystemMessage from './components/SystemMessage.vue';
 import ReferenceMessage from './components/ReferenceMessage.vue';
 import MergeMessage from './components/MergeMessage.vue';
+import MiniProgrameMessage from './components/MiniProgrameMessage.vue';
 import UnknownMessage from './components/UnknownMessage.vue';
 
 const messageTypes: Record<string, { name: string, component: any }> = {
@@ -29,7 +30,7 @@ const messageTypes: Record<string, { name: string, component: any }> = {
   // "19": { name: "表格", component: UnknownMessage },
   // "20": { name: "PDF", component: UnknownMessage },
   // "23": { name: "行程信息", component: UnknownMessage },
-  // "24": { name: "小程序", component: UnknownMessage },
+  "24": { name: "小程序", component: MiniProgrameMessage },
   // "25": { name: "富文本", component: UnknownMessage },
   // "26": { name: "群直播", component: UnknownMessage },
   // "27": { name: "比心表情", component: UnknownMessage },
