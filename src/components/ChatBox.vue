@@ -9,7 +9,9 @@
             <span class="time">{{ message.createTime }}</span>
           </div>
           <div class="message-content">
+            <img v-if="message.selfFlag" :src="rebot" class="rebot">
             <Message :record="message" :friend="friend" />
+            <img v-if="!message.selfFlag" :src="rebot" class="rebot">
           </div>
         </div>
       </template>
@@ -27,6 +29,7 @@
 import { imApi } from '@/api';
 import { ref, defineProps, withDefaults, reactive, watch, nextTick } from 'vue';
 import Message from './Message/index.vue';
+import rebot from '@/assets/rebot.png'
 interface IProps {
   friend: IFriendItem;
   node: IComputerTreeNode;
@@ -186,11 +189,19 @@ defineExpose({
 
 .message-content {
   padding: 5px 10px;
-  display: inline-block;
+  display: inline-flex;
   max-width: 70%;
   overflow: auto;
   /* 消息显示不下就换行 */
   word-wrap: break-word;
+  gap: 10px;
+}
+
+.rebot {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
 }
 
 .middle {
@@ -204,6 +215,9 @@ defineExpose({
     align-items: center;
     justify-content: center;
     max-width: 100%;
+  }
+  .rebot {
+    display: none;
   }
 }
 
