@@ -25,7 +25,7 @@ const props = defineProps(['node'])
 const selectedFriend = ref<IFriendItem | null>(null);
 provide('computer', props.node);
 provide('friend', selectedFriend);
-provide('imType', 2);
+provide('imType', 1);
 
 
 

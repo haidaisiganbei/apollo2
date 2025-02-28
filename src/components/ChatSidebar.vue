@@ -39,10 +39,11 @@ const emit = defineEmits<{ (e: 'selectFriend', friend: IFriendItem): void }>();
 // 账号
 const accounts = ref<IAccountListItem[]>([])
 const activeAccount = ref<number>();
+const imType = inject('imType');
 const initAccountList = async () => {
   accounts.value = await imApi.getAccountList({
     computerId: props.node.id,
-    imType: 3
+    imType
   })
   if(!activeAccount.value){
     activeAccount.value = accounts?.value[0]?.id;

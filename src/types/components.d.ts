@@ -16,6 +16,7 @@ declare module 'vue' {
     DevMessage: typeof import('./../components/Message/components/DevMessage.vue')['default']
     EditableInput: typeof import('./../components/EditableInput.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElBadge: typeof import('element-plus/es')['ElBadge']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElContainer: typeof import('element-plus/es')['ElContainer']
