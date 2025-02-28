@@ -30,11 +30,13 @@ import { imApi } from '@/api';
 import { ref, defineProps, withDefaults, reactive, watch, nextTick } from 'vue';
 import Message from './Message/index.vue';
 import rebot from '@/assets/rebot.png'
+import dayjs from 'dayjs';
 interface IProps {
   friend: IFriendItem;
   node: IComputerTreeNode;
   initSize?: number;
   msgType?: Array<any>;
+  selectedDate?: any;
 }
 
 interface IGetObjectChatSearchData {
@@ -59,12 +61,21 @@ const highlightedMessageId = ref<string | null>(null);
 const initMessages = async () => {
   try {
     messageRefs.value = [];
+    let date:{
+      beginTime?: string,
+      endTime?: string
+    } = {}
     if (!props.friend?.id) return;
+    if(props.selectedDate){
+       date.beginTime = dayjs(props.selectedDate[0]).format('YYYY-MM-DD 00:00:00')
+       date.endTime = dayjs(props.selectedDate[1]).format('YYYY-MM-DD 23:59:59')
+    }
     messages.value = await imApi.getMessageList({
       objectId: props.friend?.id,
       ...page,
       computerId: String(props.node.id),
-      msgTypeList: props.msgType
+      msgTypeList: props.msgType,
+      ...date
     })
     scrollToTop();
   } catch (error) {
@@ -78,7 +89,7 @@ const setMessageRefs = (el: any) => {
   }
 }
 
-watch(() => props.friend?.id, async () => {
+watch(() => [props.friend?.id,props.selectedDate], async () => {
   initMessages()
 }, {
   immediate: true
@@ -137,7 +148,7 @@ defineExpose({
 <style scoped lang="scss">
 .chat-container {
   height: calc(100vh - 270px);
-  min-width: 800px;
+  // min-width: 600px;
   max-width: 1200px;
   width: 100%;
   overflow-y: hidden;
@@ -216,6 +227,7 @@ defineExpose({
     justify-content: center;
     max-width: 100%;
   }
+
   .rebot {
     display: none;
   }

@@ -3,7 +3,7 @@
     <el-tabs v-model="activeTab">
       <el-tab-pane :label="`全部（${statisticsObject?.allCount ?? 0}）`" name="tab1">
       </el-tab-pane>
-      <el-tab-pane :label="`搜索结果（${searchCount ?? 0}）`" name="search" lazy>
+      <el-tab-pane v-if="hasSearch" :label="`搜索结果（${searchCount ?? 0}）`" name="search" lazy>
       </el-tab-pane>
       <el-tab-pane :label="`资金（${statisticsObject?.fundCount ?? 0}）`" name="tab2" lazy>
         <!-- <ChatBox v-if="selectedFriend" :node="node" :friend="selectedFriend" /> -->
@@ -17,27 +17,29 @@
       <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend" />
     </template>
     <template v-if="activeTab == 'search'">
-      <!-- <ChatBox v-if="selectedFriend" :node="node" :friend="selectedFriend" /> -->
       <div v-if="selectedFriend" class="search-layout">
-        <SearchList ref="searchListRef" class="search-left" :messages="searchList" :keyword="searchQuery"
-          @select="handleSkipToMessage" />
-        <ChatBox ref="searchBoxRef" class="search-right" v-if="selectedFriend" :node="node" :friend="selectedFriend" />
+        <template v-if="searchList.length">
+          <SearchList ref="searchListRef" class="search-left" :messages="searchList" :keyword="searchQuery"
+            @select="handleSkipToMessage" />
+          <ChatBox ref="searchBoxRef" class="search-right" v-if="selectedFriend" :node="node" :friend="selectedFriend"
+            :selectedDate="selectedDate" />
+        </template>
+        <template v-else>
+          <el-empty description="暂无数据" />
+        </template>
       </div>
     </template>
     <template v-if="activeTab == 'tab2'">
       <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend"
-      :msg-type="[6,8]"
-      />
+        :selectedDate="selectedDate" :msg-type="[6, 8]" />
     </template>
     <template v-if="activeTab == 'tab3'">
       <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend"
-      :msg-type="[71]"
-      />
+        :selectedDate="selectedDate" :msg-type="[71]" />
     </template>
     <template v-if="activeTab == 'tab4'">
       <ChatBox v-if="selectedFriend" style="width:100%" :node="node" :friend="selectedFriend"
-      :msg-type="[42,57,64]"
-      />
+        :selectedDate="selectedDate" :msg-type="[42, 57, 64]" />
     </template>
   </main>
 </template>
@@ -72,14 +74,21 @@ const initStatistics = async () => {
     statisticsObject.value = await imApi.getStatisticsObject({
       objectId: props.selectedFriend?.id,
       computerId: String(props.node.id),
+      beginTime: props.selectedDate ? dayjs(props.selectedDate[0]).format('YYYY-MM-DD 00:00:00') : '',
+      endTime: props.selectedDate ? dayjs(props.selectedDate[1]).format('YYYY-MM-DD 23:59:59') : '',
     })
   }
 
 }
-watch(() => props.selectedFriend?.id, async () => {
+// 好友切换
+watch(() => [props.selectedFriend?.id], async () => {
   await initStatistics()
 }, {
   immediate: true
+})
+// 日期切换
+watch(() => [props.selectedDate], async () => {
+  await initStatistics()
 })
 // 搜索
 const searchCount = computed(() => {
@@ -89,7 +98,7 @@ const searchList = ref<IGetObjectChatSearchData[]>([]);
 
 
 const searchQuery = ref<string>('');
-const selectedDate = ref('');
+// const selectedDate = ref('');
 const activeTab = ref<string>('tab1');
 // 跳转消息
 const searchBoxRef = ref(null);
@@ -101,19 +110,25 @@ const handleSkipToMessage = (message: IGetObjectChatSearchData) => {
 }
 
 const searchListRef = ref(null);
-const handleActiveTabChange = async (tab: string, content: string, date: Array<any>) => {
-  if (tab) {
-    activeTab.value = tab;
-  }
+const handleSearch = async (query: string, date: Array<any>) => {
   const list = await imApi.getChatSearchApi({
-    objectId: props.selectedFriend?.id,
-    computerId: props.node.id,
-    content: content,
+    objectId: props.selectedFriend?.id!,
+    computerId: String(props.node.id),
+    content: query,
     size: 50,
     beginTime: date ? dayjs(date[0]).format('YYYY-MM-DD 00:00:00') : '',
     endTime: date ? dayjs(date[1]).format('YYYY-MM-DD 23:59:59') : '',
   });
   searchList.value = list;
+  return list;
+}
+const hasSearch = ref(false);
+const handleActiveTabChange = async (tab: string, content: string, date: Array<any>) => {
+  if (tab) {
+    hasSearch.value = true;
+    activeTab.value = tab;
+  }
+  const list = await handleSearch(content, date);
   // searchCount.value = list.length;
   await nextTick();
   // 选中第一个

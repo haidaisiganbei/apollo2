@@ -129,9 +129,10 @@ declare global {
   interface IGetObjectChatSearchDataParams {
     /* 每页数量 */
     size: number;
+    /* 计算机ID */
     computerId: string;
     /* 对象id */
-    computerId: string;
+    objectId: number;
     /* 搜索内容 */
     content?: string;
     /* 开始时间 */
