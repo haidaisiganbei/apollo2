@@ -52,7 +52,7 @@ const handleSearch = async () => {
   // 执行搜索前先刷新好友列表
   await handleRefreshAndSelect(searchQuery.value);
   await nextTick();
-  chatWindowRef.value?.handleActiveTabChange('search', searchQuery.value, selectedDate.value)
+  await chatWindowRef.value?.handleActiveTabChange('search', searchQuery.value, selectedDate.value)
 }
 </script>
 

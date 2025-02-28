@@ -102,10 +102,12 @@ const searchQuery = ref<string>('');
 const activeTab = ref<string>('tab1');
 // 跳转消息
 const searchBoxRef = ref(null);
-const handleSkipToMessage = (message: IGetObjectChatSearchData) => {
+const handleSkipToMessage = async(message: IGetObjectChatSearchData) => {
   // 跳转到指定消息
   // alert(JSON.stringify(message))
-  searchBoxRef.value?.handleSkip(message)
+  // TODO:调用两次确保滚动到指定消息
+  await searchBoxRef.value?.handleSkip(message)
+  await searchBoxRef.value?.handleSkip(message)
   // 可以使用滚动到指定消息的逻辑
 }
 
@@ -133,8 +135,10 @@ const handleActiveTabChange = async (tab: string, content: string, date: Array<a
   await nextTick();
   // 选中第一个
   if (list.length > 0) {
+    // debugger
     searchQuery.value = content;
     searchListRef.value?.selectItem(list[0])
+    // await handleSkipToMessage(list[0])
   }
 
 }

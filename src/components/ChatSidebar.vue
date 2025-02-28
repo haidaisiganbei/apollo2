@@ -92,6 +92,7 @@ defineExpose({
         computerId: String(props.node.id)
       });
       selectFriend(friends.value[0]);
+      await nextTick();
     }
   }
 });

@@ -61,14 +61,14 @@ const highlightedMessageId = ref<string | null>(null);
 const initMessages = async () => {
   try {
     messageRefs.value = [];
-    let date:{
+    let date: {
       beginTime?: string,
       endTime?: string
     } = {}
     if (!props.friend?.id) return;
-    if(props.selectedDate){
-       date.beginTime = dayjs(props.selectedDate[0]).format('YYYY-MM-DD 00:00:00')
-       date.endTime = dayjs(props.selectedDate[1]).format('YYYY-MM-DD 23:59:59')
+    if (props.selectedDate) {
+      date.beginTime = dayjs(props.selectedDate[0]).format('YYYY-MM-DD 00:00:00')
+      date.endTime = dayjs(props.selectedDate[1]).format('YYYY-MM-DD 23:59:59')
     }
     messages.value = await imApi.getMessageList({
       objectId: props.friend?.id,
@@ -89,7 +89,7 @@ const setMessageRefs = (el: any) => {
   }
 }
 
-watch(() => [props.friend?.id,props.selectedDate], async () => {
+watch(() => [props.friend?.id, props.selectedDate], async () => {
   initMessages()
 }, {
   immediate: true
@@ -115,31 +115,80 @@ const scrollToTop = () => {
     messageContainer.value.scrollTop = 0;
   }
 };
+// const handleSkip = async (message: IGetObjectChatSearchData) => {
+//   // // 跳转到指定消息
+//   // messages.value = undefined;
+//   await nextTick();
+//   if (page.current != message.current) {
+//     page.current = message.current;
+//     messages.value = await imApi.getMessageList({
+//       objectId: props.friend?.id,
+//       ...page,
+//       computerId: String(props.node.id),
+//     })
+//     await nextTick();
+//   }
+//   console.log('messageRefs', messageRefs.value);
+
+//   const targetMessage = messageRefs.value[message.pagePosition - 1];
+//   console.log(targetMessage);
+//   if (targetMessage) {
+//     highlightedMessageId.value = String(messages.value?.records[message.pagePosition - 1]?.id) || null;
+//     console.log(highlightedMessageId.value);
+//     targetMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//     messageRefs.value = [];
+//   }
+// }
+// const handleSkip = async (message: IGetObjectChatSearchData) => {
+//   await nextTick();
+//   if (page.current !== message.current) {
+//     page.current = message.current;
+//     messages.value = await imApi.getMessageList({
+//       objectId: props.friend?.id,
+//       ...page,
+//       computerId: String(props.node.id),
+//     });
+//     await nextTick(); // 确保消息列表完全更新
+//   }
+
+//   // 等待多个 DOM 更新周期，确保所有 `ref` 都已正确填充
+//   await nextTick();
+//   await nextTick();
+//   await nextTick();
+//   console.log('messageRefs', messageRefs.value);
+
+//   const targetMessage = messageRefs.value[message.pagePosition - 1];
+//   if (targetMessage) {
+//     highlightedMessageId.value = String(messages.value?.records[message.pagePosition - 1]?.id) || null;
+//     targetMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//     messageRefs.value = [];
+//   }
+// };
 const handleSkip = async (message: IGetObjectChatSearchData) => {
-  // // 跳转到指定消息
-  // messages.value = undefined;
+  // messageRefs.value = []; // 清空 messageRefs
   await nextTick();
-  if (page.current != message.current) {
+  if (page.current !== message.current) {
     page.current = message.current;
     messages.value = await imApi.getMessageList({
       objectId: props.friend?.id,
       ...page,
       computerId: String(props.node.id),
-    })
-    await nextTick();
+    });
+    await nextTick(); // 确保消息列表完全更新
   }
-  console.log('messageRefs', messageRefs.value);
 
+  // 等待多个 DOM 更新周期，确保所有 `ref` 都已正确填充
+  await nextTick();
+  await nextTick();
+  console.log('messageRefs', messageRefs.value.length);
+  
   const targetMessage = messageRefs.value[message.pagePosition - 1];
-  console.log(targetMessage);
   if (targetMessage) {
     highlightedMessageId.value = String(messages.value?.records[message.pagePosition - 1]?.id) || null;
-    console.log(highlightedMessageId.value);
     targetMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
     messageRefs.value = [];
   }
-}
-
+};
 defineExpose({
   handleSkip
 })
@@ -164,7 +213,7 @@ defineExpose({
   padding: 10px;
   overflow-y: auto;
   // 隐藏滚动条
-  scrollbar-width: none;
+  // scrollbar-width: none;
 }
 
 .message {
