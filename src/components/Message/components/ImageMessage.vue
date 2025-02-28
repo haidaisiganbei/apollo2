@@ -122,7 +122,7 @@ const pollMessageStatus = () => {
   display: flex;
   flex-direction: column;
   align-items: start;
-  width: 100%;
+  width: 240px;
 }
 
 .image-container {
@@ -147,8 +147,8 @@ const pollMessageStatus = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 150px;
+  width: 240px;
+  height: 160px;
   border: 1px solid #dcdfe6;
 }
 
@@ -200,6 +200,7 @@ const pollMessageStatus = () => {
 }
 
 .error {
+  width: 240px;
   color: red;
   margin-top: 10px;
   font-size: 12px;

@@ -1,23 +1,26 @@
 <template>
-  <div class="file-message">
-    <div class="file-info">
-      <div class="file-name">{{ content?.title }}</div>
-      <div class="file-size">{{ formatFileSize(content?.attachment?.size ?? 0) }}</div>
+  <div style="width: 240px;">
+    <div class="file-message">
+      <div class="file-info">
+        <div class="file-name" :title="content?.title">{{ content?.title }}</div>
+        <div class="file-size">{{ formatFileSize(content?.attachment?.size ?? 0) }}</div>
+      </div>
+      <el-icon v-if="!content?.status && !isDownloading" class="file-icon">
+        <Download @click="handleDownload" />
+      </el-icon>
+      <el-icon v-if="isDownloading" class="loading-icon">
+        <Loading />
+      </el-icon>
+      <el-icon v-if="!isDownloading && content?.status === 2" class="file-icon">
+        <Download @click="handleDownload" />
+      </el-icon>
+      <el-icon v-if="content?.status === 3" class="file-icon" @click="handlePreview">
+        <Files />
+      </el-icon>
     </div>
-    <el-icon v-if="!content?.status && !isDownloading" class="file-icon">
-      <Download @click="handleDownload" />
-    </el-icon>
-    <el-icon v-if="isDownloading" class="loading-icon">
-      <Loading />
-    </el-icon>
-    <el-icon v-if="!isDownloading && content?.status === 2" class="file-icon">
-      <Download @click="handleDownload" />
-    </el-icon>
-    <el-icon v-if="content?.status === 3" class="file-icon" @click="handlePreview">
-      <Files />
-    </el-icon>
+    <div class="error">{{ content?.errMsg }}</div>
   </div>
-  <div class="error">{{ content?.errMsg }}</div>
+
 </template>
 
 <script setup lang="ts">
@@ -134,7 +137,11 @@ const handlePreview = async () => {
   background-color: #f9f9f9;
   word-wrap: break-word;
   margin-bottom: 10px;
+  width: 240px;
+  box-sizing: border-box;
+  /* overflow: hidden; */
 }
+
 
 .file-icon {
   width: 40px;
@@ -165,11 +172,20 @@ const handlePreview = async () => {
 .file-info {
   display: flex;
   flex-direction: column;
+  /* width: 200px; */
+  flex: 1;
+
 }
 
 .file-name {
   font-weight: bold;
   color: #333;
+  /* 不换行 */
+  width: 180px;
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .file-size {
