@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="card-footer">
-      <span>{{ content.bottomText }}</span>
+      <span>{{ content.bottomText||'个人名片' }}</span>
     </div>
   </div>
 </template>
@@ -68,16 +68,25 @@ const content = computed(() => {
         font-size: 16px;
         font-weight: 500;
         color: #333;
-        // margin: 0;
         text-align: left;
+        // 不换行
+        white-space: nowrap;
+        // 超出省略号
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
 
   .card-footer {
     text-align: left;
-    font-size: 14px;
-    color: #409EFF;
+    font-size: 12px;
+    // color: #409EFF;
+    padding-top: 4px;
+    height: 20px;
+    line-height: 20px;
+    color: #606266;
+    border-top: 1px solid #dcdfe6;
   }
 }
 </style>

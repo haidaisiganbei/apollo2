@@ -4,10 +4,10 @@
     <div class="operation-bar">
       <el-input v-model="filterText" placeholder="输入关键字过滤" clearable style="margin-bottom: 15px" />
       <el-select style="width: 160px;" v-model="status" @change="handleStatusChange">
-        <el-option label="全部" :value="0"></el-option>
+        <el-option label="全部" :value="-1"></el-option>
         <el-option label="在线" :value="1"></el-option>
-        <el-option label="离线" :value="2"></el-option>
-        <el-option label="升级中" :value="3"></el-option>
+        <el-option label="离线" :value="0"></el-option>
+        <el-option label="升级中" :value="2"></el-option>
       </el-select>
     </div>
 
@@ -100,21 +100,37 @@ const treeData = computed({
 const isFiltering = computed(() => filterText.value.length > 0)
 
 // 过滤方法
-const filterNode = (value, data) => {
-  if (!value) return true
-  console.log(data);
-  return data.name.includes(value)
+const filterNode = ({newText,newStatus}:{newText:string,newStatus:number}, data) => {
+  const value = newText?.trim?.()
+  if(!value){
+    // 处理状态
+    if(newStatus == -1){
+      return true 
+    } else {
+      return data.status == newStatus 
+    }
+  } else {
+    // 处理状态
+    if(newStatus == -1){
+      return data.name.includes(value)  
+    }  else {
+      return data.name.includes(value) && data.status == newStatus 
+    }
+  }
+  // if (!value) return true
+  // console.log(data);
+  // return data.name.includes(value)
 }
 // 计算机状态
-const status = ref(0)
+const status = ref(-1)
 // 计算机状态变化
 const handleStatusChange = (val: number) => {
   status.value = val
 }
 
 // 监听过滤文本变化
-watch(filterText, (newVal) => {
-  treeRef.value.filter(newVal)
+watch([filterText,status], ([newText,newStatus]) => {
+  treeRef.value.filter({newText,newStatus})
 })
 
 // 监听树形数据变化

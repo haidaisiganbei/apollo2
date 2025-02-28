@@ -1,7 +1,7 @@
 <template>
   <div class="image-message">
     <div class="image-container">
-      <video style="width: 200px;height: auto;" v-if="isDownloadSuccess" :src="imageUrl" controls />
+      <video style="width: 240px;height: auto;" v-if="isDownloadSuccess" :src="imageUrl" controls />
       <div v-else class="placeholder-container">
         <!-- <PictureFilled class="placeholder-icon" /> -->
         <div>视频</div>
@@ -118,7 +118,7 @@ const pollMessageStatus = () => {
   display: flex;
   flex-direction: column;
   align-items: start;
-  width: 100%;
+  width: 240px;
 }
 
 .image-container {
@@ -142,7 +142,7 @@ const pollMessageStatus = () => {
 }
 
 .placeholder-container {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;

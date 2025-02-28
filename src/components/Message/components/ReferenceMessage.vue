@@ -98,9 +98,10 @@ const quoteContent = computed(() => {
 }
 
 .quote-content {
+  display: inline-block;
   margin-top: 10px;
   padding: 10px;
-  background-color: #f1f1f1;
+  background-color: #cdcdcd;
   border-radius: 4px;
 }
 </style>
