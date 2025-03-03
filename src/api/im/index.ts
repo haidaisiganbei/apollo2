@@ -37,18 +37,18 @@ export function getMessageList(data: IChatDataParams): Promise<IChatDataResponse
 /**
  * 获取对象聊天搜索数据（右侧）
  */
-export const getChatSearchApi = async (data: IGetObjectChatSearchDataParams):Promise<IGetObjectChatSearchData[]> => {
+export const getChatSearchApi = async (data: IGetObjectChatSearchDataParams): Promise<IGetObjectChatSearchData[]> => {
   return request({
     url: `${baseURL}/getObjectChatSearchData`,
     method: 'post',
-    data 
-  }) 
+    data
+  })
 }
 
 /**
  * 下载消息对应附件
  */
-export const downloadMessageFileApi = async (data: {id:number,computerId:string}):Promise<IRecord> => {
+export const downloadMessageFileApi = async (data: { id: number, computerId: string }): Promise<IRecord> => {
   return request({
     url: `${baseURL}/op/downloadChatFile`,
     method: 'post',
@@ -59,7 +59,7 @@ export const downloadMessageFileApi = async (data: {id:number,computerId:string}
 /**
  * 获取消息对应附件数据
  */
-export const getMessageFileApi = async (params: {id:number,computerId:string}):Promise<any> => {
+export const getMessageFileApi = async (params: { id: number, computerId: string }): Promise<any> => {
   return request({
     url: `${baseURL}/getChatAttachment?${qs.stringify(params)}`,
     method: 'get',
@@ -68,15 +68,28 @@ export const getMessageFileApi = async (params: {id:number,computerId:string}):P
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
-  }) 
+  })
 }
 /**
  * 获取对象单条聊天记录
  */
-export const getChatRecordApi = async (data:IGetObjectChatDetailParams ):Promise<IRecord> => {
+export const getChatRecordApi = async (data: IGetObjectChatDetailParams): Promise<IRecord> => {
   return request({
     url: `${baseURL}/getObjectChatDetail`,
     method: 'post',
-    data 
+    data
+  })
+}
+
+/**
+ * 获取计算机对应的账号状态
+ */
+export const getAccountStatusApi = async (data: IGetAccountStatusParams): Promise<{
+  syncTime: string
+}> => {
+  return request({
+    url: `${baseURL}/getComputerAccountStatus`,
+    method: 'post',
+    data
   })
 }

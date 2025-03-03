@@ -71,7 +71,7 @@ declare global {
     current: number;
     objectId: number;
     computerId: string;
-    beginTime?:string ,
+    beginTime?: string,
     endTime?: string,
     msgTypeList?: number[]
   }
@@ -156,6 +156,11 @@ declare global {
     // beginTime?: string;
     // endTime?: string;
     // msgTypeList?: number[];
+  }
+  interface IGetAccountStatusParams {
+    computerId: number;
+    imType: number;
+    accountId: number;
   }
 }
 

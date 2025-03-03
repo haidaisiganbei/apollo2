@@ -82,7 +82,7 @@ function handleImageError() {
 
 // 定时刷新逻辑
 function startRefreshInterval() {
- const time = import.meta.env.PROD ? 2000 : 5000;
+ const time = import.meta.env.PROD ? 500 : 5000;
   
   refreshInterval.value = window.setInterval(() => {
     fetchImage(selectedQuality.value);

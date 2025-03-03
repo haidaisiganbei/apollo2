@@ -16,7 +16,7 @@
               {{ getGroupNumber(friend) }}
             </span>
             <span class="recent-message">{{ JSON.parse(friend?.content).text }}</span>
-            <span class="timestamp">{{ dayjs(friend.createTime).format(`MM月DD日`) }}</span>
+            <span class="timestamp">{{ dayjs(friend.createTime).format(`YYYY年MM月DD日 HH:mm:ss`) }}</span>
           </div>
         </div>
       </el-scrollbar>
@@ -169,6 +169,7 @@ const selectFriend = (friend: IFriendItem) => {
   flex-direction: column;
   position: relative;
   width: 100%;
+  padding-top: 16px;
 }
 
 .friend-name {
